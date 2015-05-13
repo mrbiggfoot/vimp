@@ -352,6 +352,9 @@ command! -nargs=1 -complete=tag FCW :Unite id/lid:<args>:-w\ -i
 " FT - find a tag (case insensitive)
 command! -nargs=1 -complete=tag FT :Unite tselect:<args>
 
+let s:vimp_path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+exec 'command! Up :!' . s:vimp_path . '/project_generate.sh'
+
 "------------------------------------------------------------------------------
 " Misc configuration
 "------------------------------------------------------------------------------
