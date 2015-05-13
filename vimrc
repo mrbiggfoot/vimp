@@ -49,6 +49,8 @@ Plugin 'guns/xterm-color-table.vim'
 
 Plugin 'moll/vim-bbye'
 
+Plugin 'mrbiggfoot/my-colors-light'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
