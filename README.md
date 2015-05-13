@@ -1,0 +1,2 @@
+# vimp
+My vim configuration.
