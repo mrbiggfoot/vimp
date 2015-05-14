@@ -44,7 +44,8 @@ Plugin 'majutsushi/tagbar'
 "Plugin 'bling/vim-airline'
 
 Plugin 'octol/vim-cpp-enhanced-highlight'
-Plugin 'nathanaelkane/vim-indent-guides'
+"Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'Yggdroot/indentLine'
 Plugin 'guns/xterm-color-table.vim'
 
 Plugin 'moll/vim-bbye'
@@ -107,17 +108,22 @@ call unite#custom#source('file,file/new,file_list,buffer', 'matchers', 'matcher_
 call unite#custom#source('file,file/new,file_list,buffer', 'sorters', 'sorter_rank')
 
 " Airline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#fnamemod = ':t'
+"let g:airline#extensions#tabline#enabled = 1
+"let g:airline#extensions#tabline#fnamemod = ':t'
 
-let g:airline_section_a = ''
-let g:airline_section_b = ''
+"let g:airline_section_a = ''
+"let g:airline_section_b = ''
 
-let g:airline_theme = 'understated'
+"let g:airline_theme = 'understated'
 
 " Indent-guides
-let g:indent_guides_auto_colors = 0
-let g:indent_guides_default_mapping = 0
+"let g:indent_guides_auto_colors = 0
+"let g:indent_guides_default_mapping = 0
+
+" indentLine
+let g:indentLine_enabled = 0
+let g:indentLine_faster = 1
+let g:indentLine_color_term = 252
 
 "------------------------------------------------------------------------------
 " Projects configuration
@@ -340,7 +346,7 @@ nnoremap <F10> :TagbarToggle<CR>
 inoremap <F10> <C-x>:TagbarToggle<CR>
 
 " F4 - toggle indent guides
-nmap <F4> <Plug>IndentGuidesToggle
+nmap <F4> :IndentLinesToggle<CR>
 
 " F3 - browse buffers
 let s:f3_cmd = StartOrCloseUniteCallCmd('Unite -direction=below buffer')
