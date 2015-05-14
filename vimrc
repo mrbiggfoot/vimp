@@ -438,6 +438,8 @@ function! <SID>SynStack()
 	echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
 
+set clipboard=unnamedplus
+
 " Enable syntax highlighting. In iTerm2, select 'Light Background' palette.
 syntax on
 colorscheme my_colors_light
