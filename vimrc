@@ -123,25 +123,41 @@ let g:indent_guides_default_mapping = 0
 " Projects configuration
 "------------------------------------------------------------------------------
 
-let prj_meta_root = '/home/apyatkov/projects/.meta' " must be an absolute path, or 'lid' won't work
-let cur_prj_root = getcwd()
-let cur_prj_branch = system('git rev-parse --abbrev-ref HEAD 2>/dev/null')
-let cur_prj_branch = substitute(cur_prj_branch, '\n', '', '')
-let cur_prj_meta_root = prj_meta_root . cur_prj_root . '/' . cur_prj_branch
-
-if isdirectory(cur_prj_meta_root)
-	"let cur_prj_gtags = cur_prj_meta_root . "/GTAGS"
-	let cur_prj_ctags = cur_prj_meta_root . "/tags"
-	" The following line is needed for Unite project files opener key mapping
-	let g:cur_prj_files = cur_prj_meta_root . "/files"
-	let g:unite_ids_db_path = cur_prj_meta_root . "/ID"
-
-	"let $GTAGSGLOBAL="GTAGSROOT=" . cur_prj_root . " GTAGSDBPATH=" . cur_prj_meta_root . " global"
-	"cscope add cur_prj_gtags
-	exec "set tags=" . cur_prj_ctags . ";"
-
-	"exec "let g:ctrlp_user_command = [ cur_prj_root, 'cat " . prj_meta_root . "/%s/files' ]"
+if has('vim_starting')
+	let s:vimp_path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 endif
+
+function! s:configure_project()
+	let prj_meta_root = '/home/apyatkov/projects/.meta' " must be an absolute path, or 'lid' won't work
+	let cur_prj_root = getcwd()
+	let cur_prj_branch = system('git rev-parse --abbrev-ref HEAD 2>/dev/null')
+	let cur_prj_branch = substitute(cur_prj_branch, '\n', '', '')
+	let cur_prj_meta_root = prj_meta_root . cur_prj_root . '/' . cur_prj_branch
+
+	if isdirectory(cur_prj_meta_root)
+		"let cur_prj_gtags = cur_prj_meta_root . "/GTAGS"
+		let cur_prj_ctags = cur_prj_meta_root . "/tags"
+
+		" The following line is needed for Unite project files opener key mapping
+		let g:cur_prj_files = cur_prj_meta_root . "/files"
+
+		" The following line specifies the IDs db path for unite-id plugin
+		let g:unite_ids_db_path = cur_prj_meta_root . "/ID"
+
+		"let $GTAGSGLOBAL="GTAGSROOT=" . cur_prj_root . " GTAGSDBPATH=" . cur_prj_meta_root . " global"
+		"cscope add cur_prj_gtags
+		exec "set tags=" . cur_prj_ctags . ";"
+
+		"exec "let g:ctrlp_user_command = [ cur_prj_root, 'cat " . prj_meta_root . "/%s/files' ]"
+	endif
+endfunction
+
+call s:configure_project()
+
+function s:update_project()
+	exec '!' . s:vimp_path . '/project_generate.sh'
+	call s:configure_project()
+endfunction
 
 "------------------------------------------------------------------------------
 " Keyboard shortcuts
@@ -352,8 +368,8 @@ command! -nargs=1 -complete=tag FCW :Unite id/lid:<args>:-w\ -i
 " FT - find a tag (case insensitive)
 command! -nargs=1 -complete=tag FT :Unite tselect:<args>
 
-let s:vimp_path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
-exec 'command! Up :!' . s:vimp_path . '/project_generate.sh'
+" Up - update project metadata
+command! Up :call s:update_project()
 
 "------------------------------------------------------------------------------
 " Misc configuration
