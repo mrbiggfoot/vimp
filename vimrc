@@ -83,13 +83,13 @@ let g:ycm_autoclose_preview_window_after_completion = 1
 
 " Unite
 call unite#custom#profile('default', 'context', {
-\	'direction': 'botright',
+\	'direction': 'dynamicbottom',
 \	'cursor_line_time': '0.0',
 \	'prompt_direction': 'top',
 \	'auto_resize': 1,
 \	'select': '1'
 \ })
-let g:prj_open_files_direction = 'topleft'
+let g:prj_open_files_direction = 'dynamictop'
 " Custom mappings for the unite buffer
 autocmd FileType unite call s:unite_settings()
 function! s:unite_settings()
@@ -349,7 +349,7 @@ inoremap <F10> <C-x>:TagbarToggle<CR>
 nmap <F4> :IndentLinesToggle<CR>
 
 " F3 - browse buffers
-let s:f3_cmd = StartOrCloseUniteCallCmd('Unite -direction=below buffer')
+let s:f3_cmd = StartOrCloseUniteCallCmd('Unite buffer')
 exec 'nnoremap <F3> ' . s:f3_cmd
 exec 'inoremap <F3> <Esc>' . s:f3_cmd
 
