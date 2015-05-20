@@ -226,6 +226,12 @@ vnoremap <unique> > >gv
 " Close buffer
 nnoremap <leader>q :Bdelete<CR>
 
+" Alt-c|v - copy/paste from X clipboard.
+vnoremap ç "+y
+nnoremap ç V"+y:echo "1 line yanked"<CR>
+nnoremap √ "+P
+inoremap √ <C-o>"+P
+
 function! ToggleColorColumn()
   if &colorcolumn == 0
     set colorcolumn=80
@@ -443,8 +449,6 @@ function! <SID>SynStack()
 	endif
 	echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
-
-set clipboard=unnamedplus
 
 " Enable syntax highlighting. In iTerm2, select 'Light Background' palette.
 syntax on
