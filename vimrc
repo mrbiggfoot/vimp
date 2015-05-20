@@ -160,7 +160,7 @@ endfunction
 
 call s:configure_project()
 
-function s:update_project()
+function! s:update_project()
 	exec '!' . s:vimp_path . '/project_generate.sh'
 	call s:configure_project()
 endfunction
@@ -220,8 +220,8 @@ inoremap <Esc>[1;9D <C-o>:bprev<CR>
 inoremap <Esc>[1;9C <C-o>:bnext<CR>
 
 " Enhance '<' '>' - do not need to reselect the block after shift it.
-vnoremap <unique> < <gv
-vnoremap <unique> > >gv
+vnoremap < <gv
+vnoremap > >gv
 
 " Close buffer
 nnoremap <leader>q :Bdelete<CR>
@@ -276,8 +276,8 @@ function! TSRight()
 "  exec "redraw"
 "  exec "wincmd h"
 endfunction
-nnoremap <unique> <C-\> :call TSRight()<CR>
-inoremap <unique> <C-\> <C-o>:call TSRight()<CR>
+nnoremap <C-\> :call TSRight()<CR>
+inoremap <C-\> <C-o>:call TSRight()<CR>
 nnoremap « :call TSRight()<CR>
 inoremap « <C-o>:call TSRight()<CR>
 
