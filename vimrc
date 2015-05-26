@@ -361,6 +361,7 @@ inoremap <F10> <C-x>:TagbarToggle<CR>
 
 " F4 - toggle indent guides
 nmap <F4> :IndentLinesToggle<CR>
+imap <F4> <C-o>:IndentLinesToggle<CR>
 
 " F3 - browse buffers
 let s:f3_cmd = StartOrCloseUniteCallCmd('Unite buffer')
