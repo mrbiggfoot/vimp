@@ -372,19 +372,19 @@ exec 'inoremap <F3> <Esc>' . s:f3_cmd
 " Custom commands
 "------------------------------------------------------------------------------
 
-" F - find a pattern in the IDs database (case sensitive)
-command! -nargs=1 -complete=tag F :Unite id/lid:<args>:-r
+" F - find a pattern in the IDs database (case insensitive)
+command! -nargs=1 -complete=tag F :Unite id/lid:<args>:-r\ -i
 
-" FW - find an exact word in the IDs database (case sensitive)
-command! -nargs=1 -complete=tag FW :Unite id/lid:<args>:-w
+" FW - find an exact word in the IDs database (case insensitive)
+command! -nargs=1 -complete=tag FW :Unite id/lid:<args>:-w\ -i
 
-" FC - find a pattern in the IDs database (case insensitive)
-command! -nargs=1 -complete=tag FC :Unite id/lid:<args>:-r\ -i
+" FC - find a pattern in the IDs database (case sensitive)
+command! -nargs=1 -complete=tag FC :Unite id/lid:<args>:-r
 
-" FWC - find an exact word in the IDs database (case insensitive)
-command! -nargs=1 -complete=tag FWC :Unite id/lid:<args>:-w\ -i
+" FWC - find an exact word in the IDs database (case sensitive)
+command! -nargs=1 -complete=tag FWC :Unite id/lid:<args>:-w
 " ...and alias:
-command! -nargs=1 -complete=tag FCW :Unite id/lid:<args>:-w\ -i
+command! -nargs=1 -complete=tag FCW :Unite id/lid:<args>:-w
 
 " FT - find a tag (case insensitive)
 command! -nargs=1 -complete=tag FT :Unite tselect:<args>
