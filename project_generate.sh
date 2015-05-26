@@ -37,20 +37,28 @@ write_project_settings()
 	echo "\"proto|py\""
 }
 
+generate_gtags()
+{
+	echo Generate gtags
+	GTAGSFORCECPP=1 gtags -i -f $CUR_PRJ_FILES $CUR_PRJ_BRANCH_META_ROOT
+}
+
 if [ $# -eq 1 ]; then
-	if [ "$1" != 'mkdir' ]; then
-		print_usage
-	fi
-	# 'mkdir' is specified
-	echo Create project metadata dir:
-	echo $CUR_PRJ_META_ROOT
-	mkdir -p $CUR_PRJ_META_ROOT
-	echo Project settings:
-	if [ -f $CUR_PRJ_SETTINGS ]; then
-		echo $CUR_PRJ_SETTINGS already exists.
+	if [ "$1" == 'mkdir' ]; then
+		echo Create project metadata dir:
+		echo $CUR_PRJ_META_ROOT
+		mkdir -p $CUR_PRJ_META_ROOT
+		echo Project settings:
+		if [ -f $CUR_PRJ_SETTINGS ]; then
+			echo $CUR_PRJ_SETTINGS already exists.
+		else
+			write_project_settings > $CUR_PRJ_SETTINGS
+			echo $CUR_PRJ_SETTINGS created, edit it if required.
+		fi
+	elif [ "$1" == 'gtags' ]; then
+		generate_gtags
 	else
-		write_project_settings > $CUR_PRJ_SETTINGS
-		echo $CUR_PRJ_SETTINGS created, edit it if required.
+		print_usage
 	fi
 	exit
 fi
@@ -109,10 +117,6 @@ write_lang_map()
 write_lang_map > $CUR_PRJ_LANG_MAP
 mkid --include="text" --default-lang="text" --lang-map=$CUR_PRJ_LANG_MAP --files0-from=$CUR_PRJ_FILES0 --output=$CUR_PRJ_IDS
 rm -f $CUR_PRJ_FILES0 $CUR_PRJ_LANG_MAP
-
-# Generate gtags
-#echo Generate gtags
-#GTAGSFORCECPP=1 gtags -i -f $CUR_PRJ_FILES $CUR_PRJ_BRANCH_META_ROOT
 
 # Generate ctags
 echo Generate ctags
