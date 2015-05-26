@@ -39,6 +39,7 @@ Plugin 'mrbiggfoot/unite-tselect2'
 Plugin 'mrbiggfoot/unite-id'
 
 Plugin 'majutsushi/tagbar'
+Plugin 'vim-scripts/a.vim'
 
 "Plugin 'kien/ctrlp.vim'
 "Plugin 'bling/vim-airline'
@@ -231,6 +232,13 @@ vnoremap ç "+y
 nnoremap ç V"+y:echo "1 line yanked"<CR>
 nnoremap √ "+P
 inoremap √ <C-o>"+P
+
+" Alt-/ - switch to correspondent header/source file
+nnoremap ÷ :A<CR>
+inoremap ÷ <C-o>:A<CR>
+" Alt-Shift-/ - swich to file under cursor
+nnoremap ¿ :IH<CR>
+inoremap ¿ <C-O>:IH<CR>
 
 function! ToggleColorColumn()
   if &colorcolumn == 0
