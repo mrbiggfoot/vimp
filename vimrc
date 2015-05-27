@@ -126,6 +126,9 @@ let g:indentLine_enabled = 0
 let g:indentLine_faster = 1
 let g:indentLine_color_term = 252
 
+" Tagbar
+let g:tagbar_width = 80
+
 "------------------------------------------------------------------------------
 " Projects configuration
 "------------------------------------------------------------------------------
@@ -358,6 +361,9 @@ inoremap <Esc>[23~ <Esc>:call ToggleUniteWindow()<CR>
 " F10 - toggle tag bar
 nnoremap <F10> :TagbarToggle<CR>
 inoremap <F10> <C-x>:TagbarToggle<CR>
+
+" Shift-F10 - open tag bar and jump to it for tag selection (with auto-close)
+nnoremap <S-F10> :TagbarOpen fjc<CR>
 
 " F4 - toggle indent guides
 nmap <F4> :IndentLinesToggle<CR>
