@@ -311,7 +311,7 @@ function! StartOrCloseUniteCallCmd(unite_cmd)
 endfunction
 
 " F12 - find definitions of the word under cursor
-let s:f12_cmd = StartOrCloseUniteCallCmd('Unite tselect:<C-r><C-w>')
+let s:f12_cmd = StartOrCloseUniteCallCmd('Unite tselect')
 exec 'nnoremap <Esc>[24~ ' . s:f12_cmd
 exec 'inoremap <Esc>[24~ <Esc>' . s:f12_cmd
 
@@ -392,8 +392,11 @@ command! -nargs=1 -complete=tag FWC :Unite id/lid:<args>:-w
 " ...and alias:
 command! -nargs=1 -complete=tag FCW :Unite id/lid:<args>:-w
 
-" FT - find a tag (case insensitive)
-command! -nargs=1 -complete=tag FT :Unite tselect:<args>
+" FT - find an exact word in the tags database (case insensitive)
+command! -nargs=1 -complete=tag FT :Unite tselect:\\<<args>\\>
+
+" FTE - match an expression in the tags database
+command! -nargs=1 -complete=tag FTE :Unite tselect:<args>
 
 " Up - update project metadata
 command! Up :call s:update_project()
