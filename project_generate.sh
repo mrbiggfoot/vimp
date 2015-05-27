@@ -12,9 +12,15 @@ CUR_PRJ_IDS=${CUR_PRJ_BRANCH_META_ROOT}/ID
 
 print_usage()
 {
-	echo "project_generate.sh [mkdir]"
-	echo "  If 'mkdir' is specified, creates the project's metadata directory,"
-	echo "  otherwise updates the current project's metadata."
+	echo
+	echo "project_generate.sh [ mkdir | gtags | cleanall ]"
+	echo "If none of the following is specified, update the current project's metadata."
+	echo
+	echo "  * If 'mkdir' is specified, creates the project's metadata directory."
+	echo "  * If 'gtags' is specified, generates GNU Global tags."
+	echo "  * If 'cleanall' is specified, deletes metadata of all the branches"
+	echo "    except the current one."
+	echo
 	exit
 }
 
@@ -57,6 +63,10 @@ if [ $# -eq 1 ]; then
 		fi
 	elif [ "$1" == 'gtags' ]; then
 		generate_gtags
+	elif [ "$1" == 'cleanall' ]; then
+		echo Delete all branches metadata except the current one:
+		echo $CUR_PRJ_BRANCH_META_ROOT
+		find $CUR_PRJ_META_ROOT -maxdepth 1 ! -path "$CUR_PRJ_BRANCH_META_ROOT" ! -path "$CUR_PRJ_META_ROOT" -type d | xargs rm -Rf
 	else
 		print_usage
 	fi
