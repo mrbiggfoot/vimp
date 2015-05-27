@@ -18,6 +18,7 @@ print_usage()
 	echo
 	echo "  * If 'mkdir' is specified, creates the project's metadata directory."
 	echo "  * If 'gtags' is specified, generates GNU Global tags."
+	echo "  * If 'clean' is specified, deletes metadata of all the dead branches."
 	echo "  * If 'cleanall' is specified, deletes metadata of all the branches"
 	echo "    except the current one."
 	echo
@@ -67,6 +68,17 @@ if [ $# -eq 1 ]; then
 		echo Delete all branches metadata except the current one:
 		echo $CUR_PRJ_BRANCH_META_ROOT
 		find $CUR_PRJ_META_ROOT -maxdepth 1 ! -path "$CUR_PRJ_BRANCH_META_ROOT" ! -path "$CUR_PRJ_META_ROOT" -type d | xargs rm -Rf
+	elif [ "$1" == 'clean' ]; then
+		echo Delete all dead branches
+		for dir in `find $CUR_PRJ_META_ROOT -maxdepth 1 ! -path "$CUR_PRJ_BRANCH_META_ROOT" ! -path "$CUR_PRJ_META_ROOT" -type d -printf %f"\n"`
+		do
+			git branch | grep "$dir"
+			if [ $? -ne 0 ]; then
+				DELETE_BRANCH=$CUR_PRJ_META_ROOT/$dir
+				echo Delete $DELETE_BRANCH
+				rm -Rf $DELETE_BRANCH
+			fi
+		done
 	else
 		print_usage
 	fi
