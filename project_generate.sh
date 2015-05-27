@@ -13,7 +13,7 @@ CUR_PRJ_IDS=${CUR_PRJ_BRANCH_META_ROOT}/ID
 print_usage()
 {
 	echo
-	echo "project_generate.sh [ mkdir | gtags | cleanall ]"
+	echo "project_generate.sh [ mkdir | gtags | clean | cleanall ]"
 	echo "If none of the following is specified, update the current project's metadata."
 	echo
 	echo "  * If 'mkdir' is specified, creates the project's metadata directory."
