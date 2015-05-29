@@ -283,15 +283,39 @@ function! TSRight()
 
   exec "b ".l:cur_buf
   call winrestview(l:cur_view)
-  exec "Unite -immediately tselect:".l:tag
-"  exec "3match ex_SynObjectLine /".l:tag."/"
-"  exec "redraw"
-"  exec "wincmd h"
+  exec "YcmCompleter GoTo"
+  let l:new_buf = bufnr('%')
+  let l:new_line_num = line('.')
+  if l:new_line_num == l:cur_view.lnum && l:new_buf == l:cur_buf
+	" Failed to jump using YouCompleteMe, run Unite
+	exec 'Unite -immediately tselect:\\<' . l:tag . '\\>'
+  else
+    exec '2match SymbolLineMatch /\%' . l:new_line_num . 'l/'
+	exec l:cur_wnd . "wincmd w"
+  endif
 endfunction
+
+" Ctrl-\, Alt-\ - search for the word under cursor in the right window
 nnoremap <C-\> :call TSRight()<CR>
 inoremap <C-\> <C-o>:call TSRight()<CR>
 nnoremap « :call TSRight()<CR>
 inoremap « <C-o>:call TSRight()<CR>
+
+function! TSCurrent()
+  let l:cur_buf = bufnr('%')
+  let l:cur_line_num = line('.')
+  exec "YcmCompleter GoTo"
+  let l:new_buf = bufnr('%')
+  let l:new_line_num = line('.')
+  if l:new_line_num == l:cur_line_num && l:new_buf == l:cur_buf
+	" Failed to jump using YouCompleteMe, run Unite
+	exec 'Unite -immediately tselect:\\<' . expand("<cword>") . '\\>'
+  endif
+endfunction
+
+" Cmd-\ - jump to the word under cursor definition/declaration in the current window
+nnoremap <Esc>[10~ :call TSCurrent()<CR>
+inoremap <Esc>[10~ <Esc>:call TSCurrent()<CR>
 
 " F8 - clear highlight of the last search until the next search
 nnoremap <Esc>[19~ :noh<CR>
