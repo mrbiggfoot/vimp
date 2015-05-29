@@ -46,6 +46,13 @@
 	<real>1</real>
 	<key>GlobalKeyMap</key>
 	<dict>
+		<key>0x5c-0x100000</key>
+		<dict>
+			<key>Action</key>
+			<integer>10</integer>
+			<key>Text</key>
+			<string>[10~</string>
+		</dict>
 		<key>0x70-0x80000</key>
 		<dict>
 			<key>Action</key>
@@ -1308,13 +1315,6 @@
 					<key>Text</key>
 					<string>0x02</string>
 				</dict>
-				<key>0x5c-0x100000</key>
-				<dict>
-					<key>Action</key>
-					<integer>11</integer>
-					<key>Text</key>
-					<string>0x1c</string>
-				</dict>
 				<key>0x5d-0x80000</key>
 				<dict>
 					<key>Action</key>
@@ -2075,13 +2075,6 @@
 					<key>Text</key>
 					<string>0x02</string>
 				</dict>
-				<key>0x5c-0x100000</key>
-				<dict>
-					<key>Action</key>
-					<integer>11</integer>
-					<key>Text</key>
-					<string>0x1c</string>
-				</dict>
 				<key>0x5d-0x80000</key>
 				<dict>
 					<key>Action</key>
@@ -2526,7 +2519,7 @@
 	<key>NoSyncTimeOfLastPromo</key>
 	<real>453272157.07467902</real>
 	<key>NoSyncTimeOfLastPromoDownload</key>
-	<real>454009965.09893101</real>
+	<real>454452586.64991498</real>
 	<key>OnlyWhenMoreTabs</key>
 	<true/>
 	<key>OpenArrangementAtStartup</key>
@@ -2591,7 +2584,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2015-05-27T17:43:48Z</date>
+	<date>2015-05-29T01:58:53Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>ShowBookmarkName</key>
