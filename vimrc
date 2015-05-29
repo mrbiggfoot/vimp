@@ -315,14 +315,13 @@ endfunction
 
 " Cmd-\ - jump to the word under cursor definition/declaration in the current window
 nnoremap <Esc>[10~ :call TSCurrent()<CR>
-inoremap <Esc>[10~ <Esc>:call TSCurrent()<CR>
+inoremap <Esc>[10~ <C-o>:call TSCurrent()<CR>
 
 " F8 - clear highlight of the last search until the next search
 nnoremap <Esc>[19~ :noh<CR>
 inoremap <Esc>[19~ <C-o>:noh<CR>
 
 function! StartOrCloseUnite(unite_cmd)
-"	let unite_winnr = unite#helper#get_unite_winnr('default')
 	let unite_winnr = unite#get_unite_winnr('default')
 	if unite_winnr > 0
 		exec "Unite -toggle"
@@ -351,8 +350,10 @@ exec 'nnoremap <Esc>[24;4~ ' . s:a_f12_cmd
 exec 'inoremap <Esc>[24;4~ <Esc>' . s:a_f12_cmd
 
 " Cmd-F9|F10 - backward/forward jump stack navigation
-nnoremap <Esc>[20;3~ <C-o><CR>
-nnoremap <Esc>[21;3~ <C-i><CR>
+nnoremap <Esc>[20;3~ <C-o>
+nnoremap <Esc>[21;3~ <C-i>
+inoremap <Esc>[20;3~ <C-o><C-o>
+inoremap <Esc>[21;3~ <C-o><C-i>
 
 " Ctrl-P - open list of files
 if exists("g:cur_prj_files")
