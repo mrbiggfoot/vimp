@@ -75,6 +75,7 @@ filetype plugin indent on    " required
 " YouCompleteMe
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_complete_in_comments = 1
 
 " Gtags
 "set csprg=gtags-cscope
@@ -125,6 +126,9 @@ call unite#custom#source('file,file/new,file_list,buffer', 'sorters', 'sorter_ra
 let g:indentLine_enabled = 0
 let g:indentLine_faster = 1
 let g:indentLine_color_term = 252
+
+" Tagbar
+let g:tagbar_width = 80
 
 "------------------------------------------------------------------------------
 " Projects configuration
@@ -308,7 +312,7 @@ function! StartOrCloseUniteCallCmd(unite_cmd)
 endfunction
 
 " F12 - find definitions of the word under cursor
-let s:f12_cmd = StartOrCloseUniteCallCmd('Unite tselect:<C-r><C-w>')
+let s:f12_cmd = StartOrCloseUniteCallCmd('Unite tselect')
 exec 'nnoremap <Esc>[24~ ' . s:f12_cmd
 exec 'inoremap <Esc>[24~ <Esc>' . s:f12_cmd
 
@@ -359,6 +363,9 @@ inoremap <Esc>[23~ <Esc>:call ToggleUniteWindow()<CR>
 nnoremap <F10> :TagbarToggle<CR>
 inoremap <F10> <C-x>:TagbarToggle<CR>
 
+" Shift-F10 - open tag bar and jump to it for tag selection (with auto-close)
+nnoremap <S-F10> :TagbarOpen fjc<CR>
+
 " F4 - toggle indent guides
 nmap <F4> :IndentLinesToggle<CR>
 imap <F4> <C-o>:IndentLinesToggle<CR>
@@ -386,8 +393,11 @@ command! -nargs=1 -complete=tag FWC :Unite id/lid:<args>:-w
 " ...and alias:
 command! -nargs=1 -complete=tag FCW :Unite id/lid:<args>:-w
 
-" FT - find a tag (case insensitive)
-command! -nargs=1 -complete=tag FT :Unite tselect:<args>
+" FT - find an exact word in the tags database (case insensitive)
+command! -nargs=1 -complete=tag FT :Unite tselect:\\<<args>\\>
+
+" FTE - match an expression in the tags database
+command! -nargs=1 -complete=tag FTE :Unite tselect:<args>
 
 " Up - update project metadata
 command! Up :call s:update_project()
