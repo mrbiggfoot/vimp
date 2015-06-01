@@ -391,6 +391,11 @@ inoremap <F10> <C-x>:TagbarToggle<CR>
 " Shift-F10 - open tag bar and jump to it for tag selection (with auto-close)
 nnoremap <S-F10> :TagbarOpen fjc<CR>
 
+" F9 - jump list
+let s:f9_cmd = StartOrCloseUniteCallCmd('Unite jump')
+exec 'nnoremap <F9> ' . s:f9_cmd
+exec 'inoremap <F9> <Esc>' . s:f9_cmd
+
 " F4 - toggle indent guides
 nmap <F4> :IndentLinesToggle<CR>
 imap <F4> <C-o>:IndentLinesToggle<CR>
