@@ -136,6 +136,9 @@ let g:tagbar_width = 80
 
 if has('vim_starting')
 	let s:vimp_path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+	if !exists("g:vimp_force_tselect")
+		let g:vimp_force_tselect = 0
+	endif
 endif
 
 function! s:configure_project()
@@ -271,28 +274,32 @@ endfunction
 nnoremap <Bar> :call DupRight()<CR>
 
 function! TSRight()
-  let l:cur_wnd = winnr()
-  let l:cur_view = winsaveview()
-  let l:cur_buf = bufnr('%')
-  let l:tag = expand("<cword>")
-  exec "wincmd l"
-  if winnr() == l:cur_wnd
-    exec "wincmd v"
-    exec "wincmd l"
-  endif
+	let l:cur_wnd = winnr()
+	let l:cur_view = winsaveview()
+	let l:cur_buf = bufnr('%')
+	let l:tag = expand("<cword>")
+	exec "wincmd l"
+	if winnr() == l:cur_wnd
+		exec "wincmd v"
+		exec "wincmd l"
+	endif
 
-  exec "b ".l:cur_buf
-  call winrestview(l:cur_view)
-  exec "YcmCompleter GoTo"
-  let l:new_buf = bufnr('%')
-  let l:new_line_num = line('.')
-  if l:new_line_num == l:cur_view.lnum && l:new_buf == l:cur_buf
-	" Failed to jump using YouCompleteMe, run Unite
-	exec 'Unite -immediately tselect:\\<' . l:tag . '\\>'
-  else
-    exec '2match SymbolLineMatch /\%' . l:new_line_num . 'l/'
-	exec l:cur_wnd . "wincmd w"
-  endif
+	exec "b ".l:cur_buf
+	call winrestview(l:cur_view)
+	if g:vimp_force_tselect != 0
+		exec 'Unite -immediately tselect:\\<' . l:tag . '\\>'
+	else
+		exec "YcmCompleter GoTo"
+		let l:new_buf = bufnr('%')
+		let l:new_line_num = line('.')
+		if l:new_line_num == l:cur_view.lnum && l:new_buf == l:cur_buf
+			" Failed to jump using YouCompleteMe, run Unite
+			exec 'Unite -immediately tselect:\\<' . l:tag . '\\>'
+		else
+			exec '2match SymbolLineMatch /\%' . l:new_line_num . 'l/'
+			exec l:cur_wnd . "wincmd w"
+		endif
+	endif
 endfunction
 
 " Ctrl-\, Alt-\ - search for the word under cursor in the right window
@@ -302,15 +309,19 @@ nnoremap « :call TSRight()<CR>
 inoremap « <C-o>:call TSRight()<CR>
 
 function! TSCurrent()
-  let l:cur_buf = bufnr('%')
-  let l:cur_line_num = line('.')
-  exec "YcmCompleter GoTo"
-  let l:new_buf = bufnr('%')
-  let l:new_line_num = line('.')
-  if l:new_line_num == l:cur_line_num && l:new_buf == l:cur_buf
-	" Failed to jump using YouCompleteMe, run Unite
-	exec 'Unite -immediately tselect:\\<' . expand("<cword>") . '\\>'
-  endif
+	if g:vimp_force_tselect != 0
+		exec 'Unite -immediately tselect:\\<' . expand("<cword>") . '\\>'
+	else
+		let l:cur_buf = bufnr('%')
+		let l:cur_line_num = line('.')
+		exec "YcmCompleter GoTo"
+		let l:new_buf = bufnr('%')
+		let l:new_line_num = line('.')
+		if l:new_line_num == l:cur_line_num && l:new_buf == l:cur_buf
+			" Failed to jump using YouCompleteMe, run Unite
+			exec 'Unite -immediately tselect:\\<' . expand("<cword>") . '\\>'
+		endif
+	endif
 endfunction
 
 " Cmd-\ - jump to the word under cursor definition/declaration in the current window
