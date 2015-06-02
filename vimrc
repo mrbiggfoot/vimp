@@ -444,7 +444,25 @@ command! -nargs=1 -complete=tag FT :Unite tselect:\\<<args>\\>
 command! -nargs=1 -complete=tag FTE :Unite tselect:<args>
 
 " Up - update project metadata
-command! Up :call s:update_project()
+command! -nargs=0 Up :call s:update_project()
+
+function! s:SwapWindowWith(pos)
+	let l:cur_wnd = winnr()
+	let l:cur_buf = bufnr('%')
+	let l:cur_view = winsaveview()
+	exec "100wincmd h"
+	if a:pos > 1
+		exec (a:pos - 1) . "wincmd l"
+	endif
+	let l:swap_buf = bufnr('%')
+	let l:swap_view = winsaveview()
+	exec "b " . l:cur_buf
+	call winrestview(l:cur_view)
+	exec l:cur_wnd . "wincmd w"
+	exec "b " . l:swap_buf
+	call winrestview(l:swap_view)
+endfunction
+command! -nargs=1 W :call s:SwapWindowWith(<args>)
 
 "------------------------------------------------------------------------------
 " Misc configuration
