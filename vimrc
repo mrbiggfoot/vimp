@@ -250,6 +250,28 @@ inoremap ÷ <C-o>:A<CR>
 nnoremap ¿ :IH<CR>
 inoremap ¿ <C-O>:IH<CR>
 
+function! SwapWindowWith(pos)
+	let l:cur_wnd = winnr()
+	let l:cur_buf = bufnr('%')
+	let l:cur_view = winsaveview()
+	exec "100wincmd h"
+	if a:pos > 1
+		exec (a:pos - 1) . "wincmd l"
+	endif
+	let l:swap_buf = bufnr('%')
+	let l:swap_view = winsaveview()
+	exec "b " . l:cur_buf
+	call winrestview(l:cur_view)
+	exec l:cur_wnd . "wincmd w"
+	exec "b " . l:swap_buf
+	call winrestview(l:swap_view)
+endfunction
+
+nnoremap 11 :call SwapWindowWith(1)<CR>
+nnoremap 22 :call SwapWindowWith(2)<CR>
+nnoremap 33 :call SwapWindowWith(3)<CR>
+nnoremap 44 :call SwapWindowWith(4)<CR>
+
 function! ToggleColorColumn()
   if &colorcolumn == 0
     set colorcolumn=80
@@ -458,23 +480,9 @@ command! -nargs=1 -complete=tag FTE :Unite tselect:<args>
 " Up - update project metadata
 command! -nargs=0 Up :call s:update_project()
 
-function! s:SwapWindowWith(pos)
-	let l:cur_wnd = winnr()
-	let l:cur_buf = bufnr('%')
-	let l:cur_view = winsaveview()
-	exec "100wincmd h"
-	if a:pos > 1
-		exec (a:pos - 1) . "wincmd l"
-	endif
-	let l:swap_buf = bufnr('%')
-	let l:swap_view = winsaveview()
-	exec "b " . l:cur_buf
-	call winrestview(l:cur_view)
-	exec l:cur_wnd . "wincmd w"
-	exec "b " . l:swap_buf
-	call winrestview(l:swap_view)
-endfunction
-command! -nargs=1 W :call s:SwapWindowWith(<args>)
+" W - swap contents of the current window with the window at the specified
+" position (1 - leftmost, 2 - the one right next to 1, etc.)
+command! -nargs=1 W :call SwapWindowWith(<args>)
 
 "------------------------------------------------------------------------------
 " Misc configuration
