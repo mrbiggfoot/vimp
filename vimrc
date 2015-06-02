@@ -200,6 +200,8 @@ inoremap <Esc>[1;9B <C-x><C-e>
 inoremap <Esc>[1;9A <C-x><C-y>
 "inoremap <Esc>[1;9B <C-o><C-e>
 "inoremap <Esc>[1;9A <C-o><C-y>
+nnoremap ' <C-e>
+nnoremap ] <C-y>
 
 " Ctrl-up|down scrolling
 nnoremap <C-Down> <C-e>
