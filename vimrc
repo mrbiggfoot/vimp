@@ -276,7 +276,7 @@ function! DupRight()
 endfunction
 nnoremap <Bar> :call DupRight()<CR>
 
-function! TSRight()
+function! TSRight(ycm_cmd)
 	let l:cur_wnd = winnr()
 	let l:cur_view = winsaveview()
 	let l:cur_buf = bufnr('%')
@@ -292,7 +292,7 @@ function! TSRight()
 	if g:vimp_force_tselect != 0
 		exec 'Unite -immediately tselect:\\<' . l:tag . '\\>'
 	else
-		exec "YcmCompleter GoTo"
+		exec "YcmCompleter " . a:ycm_cmd
 		let l:new_buf = bufnr('%')
 		let l:new_line_num = line('.')
 		if l:new_line_num == l:cur_view.lnum && l:new_buf == l:cur_buf
@@ -306,18 +306,25 @@ function! TSRight()
 endfunction
 
 " Ctrl-\, Alt-\ - search for the word under cursor in the right window
-nnoremap <C-\> :call TSRight()<CR>
-inoremap <C-\> <C-o>:call TSRight()<CR>
-nnoremap « :call TSRight()<CR>
-inoremap « <C-o>:call TSRight()<CR>
+nnoremap <C-\> :call TSRight('GoTo')<CR>
+inoremap <C-\> <C-o>:call TSRight('GoTo')<CR>
+nnoremap « :call TSRight('GoTo')<CR>
+inoremap « <C-o>:call TSRight('GoTo')<CR>
 
-function! TSCurrent()
+" Ctrl-Shift-\, Alt-Shift-\ - search for the declaration of the word under
+" cursor in the right window
+nnoremap <Esc>[12~ :call TSRight('GoToDeclaration')<CR>
+inoremap <Esc>[12~ <C-o>:call TSRight('GoToDeclaration')<CR>
+nnoremap » :call TSRight('GoToDeclaration')<CR>
+inoremap » <C-o>:call TSRight('GoToDeclaration')<CR>
+
+function! TSCurrent(ycm_cmd)
 	if g:vimp_force_tselect != 0
 		exec 'Unite -immediately tselect:\\<' . expand("<cword>") . '\\>'
 	else
 		let l:cur_buf = bufnr('%')
 		let l:cur_line_num = line('.')
-		exec "YcmCompleter GoTo"
+		exec "YcmCompleter " . a:ycm_cmd
 		let l:new_buf = bufnr('%')
 		let l:new_line_num = line('.')
 		if l:new_line_num == l:cur_line_num && l:new_buf == l:cur_buf
@@ -328,8 +335,13 @@ function! TSCurrent()
 endfunction
 
 " Cmd-\ - jump to the word under cursor definition/declaration in the current window
-nnoremap <Esc>[10~ :call TSCurrent()<CR>
-inoremap <Esc>[10~ <C-o>:call TSCurrent()<CR>
+nnoremap <Esc>[10~ :call TSCurrent('GoTo')<CR>
+inoremap <Esc>[10~ <C-o>:call TSCurrent('GoTo')<CR>
+
+" Cmd-Shift-\ - jump to the declaration of the word under cursor in the
+" current window
+nnoremap <Esc>[11~ :call TSCurrent('GoToDeclaration')<CR>
+inoremap <Esc>[11~ <C-o>:call TSCurrent('GoToDeclaration')<CR>
 
 " F8 - clear highlight of the last search until the next search
 nnoremap <Esc>[19~ :noh<CR>
