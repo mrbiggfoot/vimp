@@ -44,7 +44,7 @@ Plugin 'vim-scripts/a.vim'
 "Plugin 'kien/ctrlp.vim'
 "Plugin 'bling/vim-airline'
 
-Plugin 'octol/vim-cpp-enhanced-highlight'
+Plugin 'mrbiggfoot/vim-cpp-enhanced-highlight'
 "Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'Yggdroot/indentLine'
 Plugin 'guns/xterm-color-table.vim'
@@ -129,6 +129,9 @@ let g:indentLine_color_term = 252
 
 " Tagbar
 let g:tagbar_width = 80
+
+" vim-cpp-enhanced-highlight
+let g:cpp_experimental_template_highlight = 1
 
 "------------------------------------------------------------------------------
 " Projects configuration
