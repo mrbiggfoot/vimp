@@ -455,6 +455,9 @@ let s:f3_cmd = StartOrCloseUniteCallCmd('Unite buffer')
 exec 'nnoremap <F3> ' . s:f3_cmd
 exec 'inoremap <F3> <Esc>' . s:f3_cmd
 
+nnoremap <leader>sd :set statusline=<CR>
+nnoremap <leader>sf :set statusline=%{tagbar#currenttag('%s','-','f')}\ [%t]%=%l,%c\ %P<CR>
+
 "------------------------------------------------------------------------------
 " Custom commands
 "------------------------------------------------------------------------------
