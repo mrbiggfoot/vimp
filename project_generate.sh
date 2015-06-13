@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 PRJ_META_ROOT=~/projects/.meta
 CUR_PRJ_META_ROOT=$PRJ_META_ROOT$(pwd)

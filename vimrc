@@ -145,7 +145,7 @@ if has('vim_starting')
 endif
 
 function! s:configure_project()
-	let prj_meta_root = '/home/apyatkov/projects/.meta' " must be an absolute path, or 'lid' won't work
+	let prj_meta_root = $VIMP_PROJECTS_META_ROOT " must be an absolute path, or 'lid' won't work
 	let cur_prj_root = getcwd()
 	let cur_prj_branch = system('git rev-parse --abbrev-ref HEAD 2>/dev/null')
 	let cur_prj_branch = substitute(cur_prj_branch, '\n', '', '')
