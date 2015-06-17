@@ -131,7 +131,7 @@ let g:indentLine_color_term = 252
 let g:tagbar_width = 80
 
 " vim-cpp-enhanced-highlight
-let g:cpp_experimental_template_highlight = 1
+"let g:cpp_experimental_template_highlight = 1
 
 "------------------------------------------------------------------------------
 " Projects configuration
