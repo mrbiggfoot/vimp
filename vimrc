@@ -541,7 +541,8 @@ autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "norm
 " Highlight lines >= 80 chars and trailing whitespaces
 function! HighlightFormatting()
   if &filetype == 'cpp' || &filetype == 'c' || &filetype == 'proto' ||
-  \ &filetype == 'python' || &filetype == 'cmake' || &filetype == 'vim'
+  \ &filetype == 'python' || &filetype == 'cmake' || &filetype == 'vim' ||
+  \ &filetype == 'javascript'
 "    highlight OverLength ctermbg=red ctermfg=white
 "    match OverLength /\%80v.\+/
     highlight WhiteSpaceEOL ctermbg=gray
