@@ -533,7 +533,7 @@ set smartindent
 set	cinoptions=>s,e0,n0,f0,{0,}0,^0,:0,=s,l0,b0,g0,hs,ps,ts,is,+s,c3,C0,0,(0,us,U0,w0,W0,m0,j0,)20,*30
 
 " File type specific indent settings
-autocmd FileType c,cpp,proto,python,cmake,javascript setlocal sw=2 ts=2 sts=2 expandtab autoindent
+autocmd FileType c,cpp,proto,python,cmake,javascript,java setlocal sw=2 ts=2 sts=2 expandtab autoindent
 
 " Uncomment the following to have Vim jump to the last position when reopening a file
 autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
@@ -542,7 +542,7 @@ autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "norm
 function! HighlightFormatting()
   if &filetype == 'cpp' || &filetype == 'c' || &filetype == 'proto' ||
   \ &filetype == 'python' || &filetype == 'cmake' || &filetype == 'vim' ||
-  \ &filetype == 'javascript'
+  \ &filetype == 'javascript' || &filetype == 'java'
 "    highlight OverLength ctermbg=red ctermfg=white
 "    match OverLength /\%80v.\+/
     highlight WhiteSpaceEOL ctermbg=gray
