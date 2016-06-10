@@ -53,6 +53,8 @@ Plugin 'moll/vim-bbye'
 
 Plugin 'mrbiggfoot/my-colors-light'
 
+Plugin 'tpope/vim-obsession'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -563,3 +565,8 @@ endfunc
 " Enable syntax highlighting. In iTerm2, select 'Light Background' palette.
 syntax on
 colorscheme my_colors_light
+
+" Restore previous session, if required
+if @% == '' && filereadable("./Session.vim")
+	silent source ./Session.vim
+endif
