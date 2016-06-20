@@ -12,25 +12,34 @@ if [ $? -ne 0 ]; then
 	exit
 fi
 
+sudo make clean
+rm -f src/auto/config.cache
+
 git pull
 if [ $? -ne 0 ]; then
 	echo \"git pull\" failed
 	exit
 fi
 
-./configure \
+scl enable devtoolset-3 './configure \
 	--with-features=huge \
 	--with-x \
 	--enable-multibyte \
 	--enable-cscope \
 	--enable-gui \
-	--enable-pythoninterp \
+	--enable-pythoninterp=dynamic \
+	--with-python-config-dir=/usr/lib64/python2.7/config \
 	--enable-rubyinterp \
 	--enable-perlinterp \
-	--enable-luainterp
+	--enable-luainterp'
 if [ $? -ne 0 ]; then
 	echo \"configure\" failed
 	exit
 fi
 
-sudo make install
+scl enable devtoolset-3 'sudo make install'
+if [ $? -ne 0 ]; then
+	echo \"make install\" failed
+	exit
+fi
+echo Success!
