@@ -9,6 +9,7 @@ CUR_PRJ_FILES0=${CUR_PRJ_BRANCH_META_ROOT}/files0
 CUR_PRJ_CTAGS=${CUR_PRJ_BRANCH_META_ROOT}/tags
 CUR_PRJ_LANG_MAP=${CUR_PRJ_BRANCH_META_ROOT}/lang_map
 CUR_PRJ_IDS=${CUR_PRJ_BRANCH_META_ROOT}/ID
+CUR_PRJ_COMPLETIONS=${CUR_PRJ_BRANCH_META_ROOT}/completions
 
 print_usage()
 {
@@ -144,3 +145,7 @@ rm -f $CUR_PRJ_FILES0 $CUR_PRJ_LANG_MAP
 echo Generate ctags
 CTAGS_OPT="--tag-relative=yes --c++-kinds=+p --fields=+iaS --extra=+q --languages=c,c++,c#,python,vim,html,lua,javascript,java,protobuf --langmap=c++:+.inl,c:+.fx,c:+.fxh,c:+.hlsl,c:+.vsh,c:+.psh,c:+.cg,c:+.shd,javascript:+.as"
 ctags -o $CUR_PRJ_CTAGS $CTAGS_OPT -L $CUR_PRJ_FILES
+
+# Generate completions
+echo Generate completions
+tail -n +7 $CUR_PRJ_CTAGS | awk '{ if (length($1) > 3) print $1 }' | grep -v "::" | sort | uniq >$CUR_PRJ_COMPLETIONS
