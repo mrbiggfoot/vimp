@@ -12,17 +12,16 @@ Build:
 ```sh
 git clone https://github.com/vim/vim.git
 cd vim/src
-make distclean  # if you build Vim before
-./configure --with-features=huge --enable-pythoninterp
+make distclean  # if you built Vim before
+./configure --with-features=huge --enable-pythoninterp --without-x --enable-gui=no
 make
 sudo make install
 ```
 
 ## Prerequisites
 
-- [vim-plug](https://github.com/junegunn/vim-plug)
 - [ctags](https://github.com/mrbiggfoot/exuberant-ctags) with protobuf support
-- [GNU idutils](http://www.gnu.org/software/idutils)
+- [ripgrep](https://github.com/BurntSushi/ripgrep)
 
 ## Installation
 
