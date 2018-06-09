@@ -57,7 +57,7 @@ imap <expr><cr> pumvisible() ? "\<plug>(MUcompletePopupAccept)" : "\<cr>"
 let g:mucomplete#no_popup_mappings = 1
 
 " neoview
-let g:neoview_fzf_common_opt = '--reverse --bind=tab:down
+let g:neoview_fzf_common_opt = '--reverse --bind=tab:down --vim-noinfo
   \ --bind=ctrl-s:line-up --bind=ctrl-x:line-down'
 " Ctrl-up|down - scroll search by one line
 tnoremap <expr><silent> <C-Up> neoview#is_search_win() ? "\<C-s>" : "\<C-Up>"
@@ -435,8 +435,8 @@ exec 'nnoremap <silent> <S-F2> ' . s:search_id_cmd
 exec 'inoremap <silent> <S-F2> <Esc>' . s:search_id_cmd
 
 " Cmd-F2 - search lines in the current buffer
-nnoremap <silent> <M-F2> :call FindBufLine()<CR>
-inoremap <silent> <M-F2> <Esc>:call FindBufLine()<CR>
+nnoremap <silent> <Esc>[1;3Q :call FindBufLine()<CR>
+inoremap <silent> <Esc>[1;3Q <Esc>:call FindBufLine()<CR>
 
 " F3 - browse buffers
 let s:f3_cmd = StartOrCloseUniteCallCmd('Unite -previewheight=100 buffer')
@@ -445,8 +445,8 @@ exec 'inoremap <silent> <F3> <Esc>' . s:f3_cmd
 exec 'tnoremap <silent> <F3> <C-\><C-n>' . s:f3_cmd
 
 " Cmd-F3 - commands history
-nnoremap <silent> <M-F3> :History:<CR>
-inoremap <silent> <M-F3> <Esc>:History:<CR>
+nnoremap <silent> <Esc>[1;3R :History:<CR>
+inoremap <silent> <Esc>[1;3R <Esc>:History:<CR>
 
 " F4 - toggle paste mode
 set pastetoggle=<F4>
