@@ -13,7 +13,7 @@ Build:
 git clone https://github.com/vim/vim.git
 cd vim/src
 make distclean  # if you built Vim before
-./configure --with-features=huge --enable-pythoninterp --without-x --enable-gui=no
+./configure --with-features=huge --enable-pythoninterp --without-x --enable-gui=no --enable-python3interp --with-python3-config-dir=/usr/lib64/python3.4/config-3.4m
 make
 sudo make install
 ```
