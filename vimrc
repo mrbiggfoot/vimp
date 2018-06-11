@@ -6,6 +6,9 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync
 endif
 
+" Deoplete/mucomplete switch.
+let s:deoplete = 1
+
 "------------------------------------------------------------------------------
 " Load plugins.
 "------------------------------------------------------------------------------
@@ -25,7 +28,13 @@ Plug 'mrbiggfoot/vim-cpp-enhanced-highlight'
 Plug 'mrbiggfoot/my-colors-light'
 
 Plug 'Shougo/unite.vim'
-Plug 'lifepillar/vim-mucomplete'
+if exists('s:deoplete')
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+else
+  Plug 'lifepillar/vim-mucomplete'
+endif
 
 call plug#end()
 
@@ -33,28 +42,33 @@ call plug#end()
 " Plugins configuration
 "------------------------------------------------------------------------------
 
-" MuComplete
-set completeopt=menuone,noselect,noinsert
-"set completeopt+=fuzzy  " Works only in 'mrbiggfoot/neovim'
-set complete=.,w,b,u
-let g:mucomplete#enable_auto_at_startup = 1
-let g:mucomplete#chains = {}
-let g:mucomplete#chains.default = ['path', 'c-n', 'dict', 'uspl']
-let g:mucomplete#chains.vim = ['path', 'c-n', 'cmd']
-let g:mucomplete#chains.cpp = ['path', 'c-n', 'tags']
-let g:mucomplete#chains.c = g:mucomplete#chains.cpp
-let g:mucomplete#chains.python = ['path', 'c-n', 'tags']
-let g:mucomplete#chains.unite = []
-set shortmess+=c   " Shut off completion messages
-set belloff+=ctrlg " If Vim beeps during completion
-imap <unique> <c-e> <plug>(MUcompletePopupCancel)
-imap <unique> <c-y> <plug>(MUcompletePopupAccept)
-imap <expr><right> pumvisible() ?
-  \ "\<plug>(MUcompletePopupAccept)\<right>" : "\<right>"
-imap <expr><end> pumvisible() ?
-  \ "\<plug>(MUcompletePopupAccept)\<end>" : "\<end>"
-imap <expr><cr> pumvisible() ? "\<plug>(MUcompletePopupAccept)" : "\<cr>"
-let g:mucomplete#no_popup_mappings = 1
+if exists('s:deoplete')
+  let g:deoplete#enable_at_startup = 1
+  inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+else
+  " MuComplete
+  set completeopt=menuone,noselect,noinsert
+  "set completeopt+=fuzzy  " Works only in 'mrbiggfoot/neovim'
+  set complete=.,w,b,u
+  let g:mucomplete#enable_auto_at_startup = 1
+  let g:mucomplete#chains = {}
+  let g:mucomplete#chains.default = ['path', 'c-n', 'dict', 'uspl']
+  let g:mucomplete#chains.vim = ['path', 'c-n', 'cmd']
+  let g:mucomplete#chains.cpp = ['path', 'c-n', 'tags']
+  let g:mucomplete#chains.c = g:mucomplete#chains.cpp
+  let g:mucomplete#chains.python = ['path', 'c-n', 'tags']
+  let g:mucomplete#chains.unite = []
+  set shortmess+=c   " Shut off completion messages
+  set belloff+=ctrlg " If Vim beeps during completion
+  imap <unique> <c-e> <plug>(MUcompletePopupCancel)
+  imap <unique> <c-y> <plug>(MUcompletePopupAccept)
+  imap <expr><right> pumvisible() ?
+    \ "\<plug>(MUcompletePopupAccept)\<right>" : "\<right>"
+  imap <expr><end> pumvisible() ?
+    \ "\<plug>(MUcompletePopupAccept)\<end>" : "\<end>"
+  imap <expr><cr> pumvisible() ? "\<plug>(MUcompletePopupAccept)" : "\<cr>"
+  let g:mucomplete#no_popup_mappings = 1
+endif
 
 " neoview
 let g:neoview_fzf_common_opt = '--reverse --bind=tab:down --vim-noinfo
