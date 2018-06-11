@@ -212,20 +212,42 @@ function! FindTag(tagname, in_project, ignore_case)
   call neoview#fzf#run(arg)
 endfunction
 
-function! s:ViewTagName(ctx, final)
-  if a:final
-    call FindTag(a:ctx[0], v:true, v:false)
-  endif
-endfunction
-
+" Find tag name in g:cur_prj_tagnames file.
 function! FindTagName()
+  function! ViewTagName(ctx, final)
+    if a:final
+      call FindTag(a:ctx[0], v:true, v:false)
+    endif
+  endfunction
+
   if !exists('g:cur_prj_tagnames')
     echomsg "No tag names file!"
     return
   endif
   let arg = {
     \ 'source' : 'cat ' . g:cur_prj_tagnames,
-    \ 'view_fn' : function('s:ViewTagName'),
+    \ 'view_fn' : function('ViewTagName'),
+    \ 'fzf_win' : 'above %40split | set winfixheight',
+    \ 'preview_win' : 'below %100split'
+    \ }
+  call neoview#fzf#run(arg)
+endfunction
+
+" Find tag name references.
+function! FindTagNameRefs()
+  function! ViewTagNameRefs(ctx, final)
+    if a:final
+      call FindPattern(a:ctx[0], v:true, '-w')
+    endif
+  endfunction
+
+  if !exists('g:cur_prj_tagnames')
+    echomsg "No tag names file!"
+    return
+  endif
+  let arg = {
+    \ 'source' : 'cat ' . g:cur_prj_tagnames,
+    \ 'view_fn' : function('ViewTagNameRefs'),
     \ 'fzf_win' : 'above %40split | set winfixheight',
     \ 'preview_win' : 'below %100split'
     \ }
@@ -413,26 +435,13 @@ endfunction
 nnoremap <silent> <F1> :call ToggleLocationWindow()<CR>
 inoremap <silent> <F1> <Esc>:call ToggleLocationWindow()<CR>
 
-" F2 - search tag
-function! SearchCmd(searcher, prompt)
-  if !exists('g:cur_prj_tags')
-    return ':echo "No ctags file!"<CR>'
-  endif
-  return ':call fzf#run({"source":"cat ' . g:cur_prj_tagnames . '",
-    \"sink":"' . a:searcher . '",
-    \"window":"aboveleft new",
-    \"options":"--reverse --bind=tab:down --prompt=\"' . a:prompt . '\""})
-    \<CR>'
-endfunction
+" F2 - search tag (case sensitive)
+nnoremap <silent> <F2> :call FindTagName()<CR>
+inoremap <silent> <F2> <Esc> :call FindTagName()<CR>
 
-let s:search_tag_cmd = SearchCmd("FT", "Tag> ")
-exec 'nnoremap <silent> <F2> ' . s:search_tag_cmd
-exec 'inoremap <silent> <F2> <Esc>' . s:search_tag_cmd
-
-" Shift-F2 - search word in the ID database (case sensitive)
-let s:search_id_cmd = SearchCmd("FWC", "Word> ")
-exec 'nnoremap <silent> <S-F2> ' . s:search_id_cmd
-exec 'inoremap <silent> <S-F2> <Esc>' . s:search_id_cmd
+" Shift-F2 - search rag name references (case sensitive)
+nnoremap <silent> <Esc>[1;2Q :call FindTagNameRefs()<CR>
+inoremap <silent> <Esc>[1;2Q <Esc>:call FindTagNameRefs()<CR>
 
 " Cmd-F2 - search lines in the current buffer
 nnoremap <silent> <Esc>[1;3Q :call FindBufLine()<CR>
