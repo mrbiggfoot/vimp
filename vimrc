@@ -242,7 +242,8 @@ function! FindTagName()
     \ 'source' : 'cat ' . g:cur_prj_tagnames,
     \ 'view_fn' : function('ViewTagName'),
     \ 'fzf_win' : 'above %40split | set winfixheight',
-    \ 'preview_win' : 'below %100split'
+    \ 'preview_win' : 'below %100split',
+    \ 'tag' : 'TagName'
     \ }
   call neoview#fzf#run(arg)
 endfunction
@@ -263,7 +264,8 @@ function! FindTagNameRefs()
     \ 'source' : 'cat ' . g:cur_prj_tagnames,
     \ 'view_fn' : function('ViewTagNameRefs'),
     \ 'fzf_win' : 'above %40split | set winfixheight',
-    \ 'preview_win' : 'below %100split'
+    \ 'preview_win' : 'below %100split',
+    \ 'tag' : 'TagRefs'
     \ }
   call neoview#fzf#run(arg)
 endfunction
