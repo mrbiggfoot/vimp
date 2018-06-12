@@ -5,19 +5,17 @@ CUR_PRJ_META_ROOT=$PRJ_META_ROOT$(pwd)
 CUR_PRJ_SETTINGS=$CUR_PRJ_META_ROOT/project_settings.sh
 CUR_PRJ_BRANCH_META_ROOT=$CUR_PRJ_META_ROOT/$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
 CUR_PRJ_FILES=${CUR_PRJ_BRANCH_META_ROOT}/files
-CUR_PRJ_FILES0=${CUR_PRJ_BRANCH_META_ROOT}/files0
 CUR_PRJ_CTAGS=${CUR_PRJ_BRANCH_META_ROOT}/tags
-CUR_PRJ_LANG_MAP=${CUR_PRJ_BRANCH_META_ROOT}/lang_map
-CUR_PRJ_IDS=${CUR_PRJ_BRANCH_META_ROOT}/ID
-CUR_PRJ_COMPLETIONS=${CUR_PRJ_BRANCH_META_ROOT}/completions
+CUR_PRJ_TAGNAMES=${CUR_PRJ_BRANCH_META_ROOT}/tagnames
 
 print_usage()
 {
 	echo
-	echo "project_generate.sh [ mkdir | gtags | clean | cleanall ]"
+	echo "project_generate.sh [ mkdir | edit | gtags | clean | cleanall ]"
 	echo "If none of the following is specified, update the current project's metadata."
 	echo
 	echo "  * If 'mkdir' is specified, creates the project's metadata directory."
+	echo "  * If 'edit' is specified, runs vim to edit the project settings."
 	echo "  * If 'gtags' is specified, generates GNU Global tags."
 	echo "  * If 'clean' is specified, deletes metadata of all the dead branches."
 	echo "  * If 'cleanall' is specified, deletes metadata of all the branches"
@@ -35,14 +33,34 @@ write_project_settings()
 	find . -maxdepth 1 ! -path "*/\.*" ! -path "*\~" ! -path "." -type d -printf "\t\"%f\"\n"
 	echo ")"
 	echo
+	echo "# Make the argument string for ripgrep"
+	echo "PRJ_DIRS_ARG="
+	echo "for dir in \"\${PRJ_DIRS[@]}\""
+	echo "do"
+	echo -e "\tPRJ_DIRS_ARG+=\"\$dir \""
+	echo "done"
+	echo
 	echo "# Directories to be excluded"
 	echo "#PRJ_DIRS_EXCLUDE=("
 	echo -e "#\t\"build/toolchain/include/boost\""
 	echo "#)"
 	echo
-	echo "# File extensions to include in the project"
-	echo "PRJ_FILE_FILTER=\"c|C|c\+\+|cc|cp|cpp|cxx|h|H|h\+\+|hh|hp|hpp|hxx|inl|ipp|\"\\"
-	echo "\"proto|py\""
+	echo "# Make the argument string for ripgrep"
+	echo "PRJ_DIRS_EXCLUDE_ARG="
+	echo "for dir in \"\${PRJ_DIRS_EXCLUDE[@]}\""
+	echo "do"
+	echo -e "\tPRJ_DIRS_EXCLUDE_ARG+=\"-g '!\$dir' \""
+	echo "done"
+	echo
+	echo "# File types to include in the project"
+	echo "PRJ_FILE_TYPES=(\"c\" \"cpp\" \"protobuf\" \"py\")"
+	echo
+	echo "# Make the argument string for ripgrep"
+	echo "PRJ_FILE_TYPES_ARG="
+	echo "for t in \"\${PRJ_FILE_TYPES[@]}\""
+	echo "do"
+	echo -e "\tPRJ_FILE_TYPES_ARG+=\"-t \$t \""
+	echo "done"
 }
 
 generate_gtags()
@@ -63,6 +81,8 @@ if [ $# -eq 1 ]; then
 			write_project_settings > $CUR_PRJ_SETTINGS
 			echo $CUR_PRJ_SETTINGS created, edit it if required.
 		fi
+	elif [ "$1" == 'edit' ]; then
+		nvim $CUR_PRJ_SETTINGS
 	elif [ "$1" == 'gtags' ]; then
 		generate_gtags
 	elif [ "$1" == 'cleanall' ]; then
@@ -97,55 +117,14 @@ source $CUR_PRJ_SETTINGS
 
 # Generate list of project files
 echo Generate list of project files
-FIND_DIRS=
-for dir in "${PRJ_DIRS[@]}"
-do
-	FIND_DIRS+="$dir "
-done
-
-FIND_DIRS_EXCLUDE=
-for dir in "${PRJ_DIRS_EXCLUDE[@]}"
-do
-	FIND_DIRS_EXCLUDE+=" -not \( -path $dir -prune \)"
-done
-
-CMD="find $FIND_DIRS $FIND_DIRS_EXCLUDE -regextype posix-extended -regex \".*\.($PRJ_FILE_FILTER)\" > $CUR_PRJ_FILES"
+CMD="rg --files $PRJ_FILE_TYPES_ARG $PRJ_DIRS_EXCLUDE_ARG $PRJ_DIRS_ARG | sort > $CUR_PRJ_FILES"
 eval $CMD
-
-# Generate IDs
-echo Generate IDs
-cat $CUR_PRJ_FILES | tr '\n' '\0' > $CUR_PRJ_FILES0
-
-write_lang_map()
-{
-	echo "*.c     text"
-	echo "*.C     text"
-	echo "*.c++   text"
-	echo "*.cc    text"
-	echo "*.cp    text"
-	echo "*.cpp   text"
-	echo "*.cxx   text"
-	echo "*.h     text"
-	echo "*.H     text"
-	echo "*.h++   text"
-	echo "*.hh    text"
-	echo "*.hp    text"
-	echo "*.hpp   text"
-	echo "*.hxx   text"
-	echo "*.inl   text"
-	echo "*.ipp   text"
-	echo "*.proto text"
-	echo "*.py    text"
-}
-write_lang_map > $CUR_PRJ_LANG_MAP
-mkid --include="text" --default-lang="text" --lang-map=$CUR_PRJ_LANG_MAP --files0-from=$CUR_PRJ_FILES0 --output=$CUR_PRJ_IDS
-rm -f $CUR_PRJ_FILES0 $CUR_PRJ_LANG_MAP
 
 # Generate ctags
 echo Generate ctags
-CTAGS_OPT="--tag-relative=yes --c++-kinds=+p --fields=+iaS --extra=+q --languages=c,c++,c#,python,vim,html,lua,javascript,java,protobuf --langmap=c++:+.inl,c:+.fx,c:+.fxh,c:+.hlsl,c:+.vsh,c:+.psh,c:+.cg,c:+.shd,javascript:+.as"
+CTAGS_OPT="--tag-relative=yes --c++-kinds=+p --fields=+iaS --extra=+q --languages=c,c++,c#,python,vim,html,lua,javascript,java,protobuf,go"
 ctags -o $CUR_PRJ_CTAGS $CTAGS_OPT -L $CUR_PRJ_FILES
 
-# Generate completions
-echo Generate completions
-tail -n +7 $CUR_PRJ_CTAGS | awk '{ if (length($1) > 3) print $1 }' | grep -v "::" | sort | uniq >$CUR_PRJ_COMPLETIONS
+# Generate tag names
+echo Generate tag names
+grep -v "^\!" $CUR_PRJ_CTAGS | awk '{ if (length($1) > 3) print $1 }' | grep -v "::" | sort | uniq >$CUR_PRJ_TAGNAMES
