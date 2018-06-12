@@ -311,7 +311,9 @@
 	<key>NSColorPickerSlidersDefaults</key>
 	<string>1</string>
 	<key>NSNavLastRootDirectory</key>
-	<string>~/nvimp/iterm2_cfg</string>
+	<string>~/vimp/iterm2_cfg</string>
+	<key>NSNavPanelExpandedSizeForOpenMode</key>
+	<string>{720, 448}</string>
 	<key>NSQuotedKeystrokeBinding</key>
 	<string></string>
 	<key>NSRepeatCountBinding</key>
@@ -359,13 +361,13 @@
 	<key>NSWindow Frame Preferences</key>
 	<string>258 407 606 456 0 0 1280 778 </string>
 	<key>NSWindow Frame SUUpdateAlert</key>
-	<string>-1270 188 620 392 -1920 -400 1920 1177 </string>
+	<string>330 288 620 392 0 0 1280 777 </string>
 	<key>NSWindow Frame SharedPreferences</key>
 	<string>-1509 101 796 473 -1920 -400 1920 1177 </string>
 	<key>NSWindow Frame UKCrashReporter</key>
 	<string>80 193 592 584 0 0 1280 777 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>0 400 585 377 0 0 1280 777 </string>
+	<string>-1920 -400 1920 1177 -1920 -400 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>-1920 -400 1920 1177 -1920 -400 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -2554,7 +2556,7 @@
 		</dict>
 	</dict>
 	<key>PrefsCustomFolder</key>
-	<string>/Users/andrewpyatkov/nvimp/iterm2_cfg</string>
+	<string>/Users/andrewpyatkov/vimp/iterm2_cfg</string>
 	<key>Print In Black And White</key>
 	<true/>
 	<key>PromptOnQuit</key>
@@ -2574,13 +2576,13 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2018-02-13T21:11:22Z</date>
+	<date>2018-06-11T16:51:52Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>ShowBookmarkName</key>
 	<false/>
 	<key>ShowFullScreenTabBar</key>
-	<true/>
+	<false/>
 	<key>ShowPaneTitles</key>
 	<true/>
 	<key>SmartPlacement</key>
@@ -2624,6 +2626,6 @@
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.1.5.beta.2</string>
+	<string>3.1.6</string>
 </dict>
 </plist>

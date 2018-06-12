@@ -28,7 +28,7 @@ Plug 'mrbiggfoot/vim-cpp-enhanced-highlight'
 Plug 'mrbiggfoot/my-colors-light'
 
 Plug 'Shougo/unite.vim'
-if exists('s:deoplete')
+if exists('s:deoplete') && has('python3')
   Plug 'Shougo/deoplete.nvim'
   Plug 'roxma/nvim-yarp'
   Plug 'roxma/vim-hug-neovim-rpc'
@@ -42,7 +42,7 @@ call plug#end()
 " Plugins configuration
 "------------------------------------------------------------------------------
 
-if exists('s:deoplete')
+if exists('s:deoplete') && has('python3')
   let g:deoplete#enable_at_startup = 1
   inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 else
