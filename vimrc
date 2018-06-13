@@ -71,7 +71,7 @@ else
 endif
 
 " neoview
-let g:neoview_fzf_common_opt = '--reverse --bind=tab:down --vim-noinfo
+let g:neoview_fzf_common_opt = '--reverse --bind=tab:down
   \ --bind=ctrl-s:line-up --bind=ctrl-x:line-down'
 " Ctrl-up|down - scroll search by one line
 tnoremap <expr><silent> <C-Up> neoview#is_search_win() ? "\<C-s>" : "\<C-Up>"
@@ -197,7 +197,8 @@ function! FindPattern(pattern, in_project, ripgrep_opt)
   endif
   let arg.fzf_win = 'botright %40split | set winfixheight'
   let arg.preview_win = 'above %100split'
-  let arg.opt = arg.opt . '--no-bold --color=fg+:0,bg+:159,hl+:196,hl:172'
+  let arg.opt = arg.opt .
+    \ '--no-sort --vim-noinfo --no-bold --color=fg+:0,bg+:159,hl+:196,hl:172'
   call neoview#fzf#run(arg)
 endfunction
 
@@ -222,7 +223,8 @@ function! FindTag(tagname, in_project, ignore_case)
   let arg = neoview#fzf#tags_arg(a:tagname, a:ignore_case, tagfile)
   let arg.fzf_win = 'botright %40split | set winfixheight'
   let arg.preview_win = 'above %100split'
-  let arg.opt = arg.opt . '--no-bold --color=fg+:0,bg+:159,hl+:196,hl:172'
+  let arg.opt = arg.opt .
+    \ '--vim-noinfo --no-bold --color=fg+:0,bg+:159,hl+:196,hl:172'
   call neoview#fzf#run(arg)
 endfunction
 
@@ -243,6 +245,7 @@ function! FindTagName()
     \ 'view_fn' : function('ViewTagName'),
     \ 'fzf_win' : 'above %40split | set winfixheight',
     \ 'preview_win' : 'below %100split',
+    \ 'opt' : '--inline-info',
     \ 'tag' : 'TagName'
     \ }
   call neoview#fzf#run(arg)
@@ -265,6 +268,7 @@ function! FindTagNameRefs()
     \ 'view_fn' : function('ViewTagNameRefs'),
     \ 'fzf_win' : 'above %40split | set winfixheight',
     \ 'preview_win' : 'below %100split',
+    \ 'opt' : '--inline-info',
     \ 'tag' : 'TagRefs'
     \ }
   call neoview#fzf#run(arg)
@@ -277,6 +281,7 @@ function! FindFile(in_project)
     let arg.source = 'cat ' . g:cur_prj_files
   endif
   let arg.fzf_win = 'topleft %40split | set winfixheight'
+  let arg.opt = arg.opt . '--inline-info'
   call neoview#fzf#run(arg)
 endfunction
 
@@ -284,7 +289,8 @@ endfunction
 function! FindBufLine()
   let arg = neoview#fzf#buf_lines_arg()
   let arg.fzf_win = 'below %40split | set winfixheight'
-  let arg.opt = arg.opt . '--no-bold --color=fg+:0,bg+:159,hl+:196,hl:172'
+  let arg.opt = arg.opt .
+    \ '--no-sort --inline-info --no-bold --color=fg+:0,bg+:159,hl+:196,hl:172'
   call neoview#fzf#run(arg)
 endfunction
 
