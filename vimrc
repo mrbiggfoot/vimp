@@ -441,7 +441,7 @@ function! StartOrCloseUniteCallCmd(unite_cmd)
   return ':call StartOrCloseUnite("' . a:unite_cmd . '")<CR>'
 endfunction
 
-" F1 - toggle location window
+" Shift-F1 - toggle location window
 function! ToggleLocationWindow()
   let l:cur_wnd = winnr()
   let l:last_winnr = winnr('$')
@@ -454,8 +454,8 @@ function! ToggleLocationWindow()
     botright lopen
   endif
 endfunction
-nnoremap <silent> <F1> :call ToggleLocationWindow()<CR>
-inoremap <silent> <F1> <Esc>:call ToggleLocationWindow()<CR>
+nnoremap <silent> <Esc>[1;2P :call ToggleLocationWindow()<CR>
+inoremap <silent> <Esc>[1;2P <Esc>:call ToggleLocationWindow()<CR>
 
 " F2 - search tag (case sensitive)
 nnoremap <silent> <F2> :call FindTagName()<CR>
