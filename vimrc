@@ -659,7 +659,7 @@ autocmd BufNewFile,BufReadPost,WinEnter * call HighlightFormatting()
 function! SetColorColumn(enable)
   if &filetype == 'cpp' || &filetype == 'c' || &filetype == 'proto' ||
   \ &filetype == 'python' || &filetype == 'cmake' || &filetype == 'vim' ||
-  \ &filetype == 'javascript' || &filetype == 'java'
+  \ &filetype == 'javascript' || &filetype == 'java' || &filetype == 'go'
     if a:enable
       set colorcolumn=80
     else
