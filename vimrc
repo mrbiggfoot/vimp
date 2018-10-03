@@ -7,7 +7,7 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 " Deoplete/mucomplete switch.
-let s:deoplete = 1
+"let s:deoplete = 1
 
 "------------------------------------------------------------------------------
 " Load plugins.
@@ -48,7 +48,7 @@ if exists('s:deoplete') && has('python3')
 else
   " MuComplete
   set completeopt=menuone,noselect,noinsert
-  "set completeopt+=fuzzy  " Works only in 'mrbiggfoot/neovim'
+  set completeopt+=fuzzy  " Works only in 'mrbiggfoot/[neo]vim'
   set complete=.,w,b,u
   let g:mucomplete#enable_auto_at_startup = 1
   let g:mucomplete#chains = {}
