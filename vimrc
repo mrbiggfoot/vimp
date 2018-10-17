@@ -60,14 +60,8 @@ else
   let g:mucomplete#chains.unite = []
   set shortmess+=c   " Shut off completion messages
   set belloff+=ctrlg " If Vim beeps during completion
-  imap <unique> <c-e> <plug>(MUcompletePopupCancel)
-  imap <unique> <c-y> <plug>(MUcompletePopupAccept)
-  imap <expr><right> pumvisible() ?
-    \ "\<plug>(MUcompletePopupAccept)\<right>" : "\<right>"
-  imap <expr><end> pumvisible() ?
-    \ "\<plug>(MUcompletePopupAccept)\<end>" : "\<end>"
-  imap <expr><cr> pumvisible() ? "\<plug>(MUcompletePopupAccept)" : "\<cr>"
-  let g:mucomplete#no_popup_mappings = 1
+  inoremap <expr><right> pumvisible() ? "<C-y><right>" : "<right>"
+  inoremap <expr><end> pumvisible() ? "<C-y><end>" : "<end>"
 endif
 
 " neoview
