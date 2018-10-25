@@ -222,6 +222,16 @@ function! FindTag(tagname, in_project, ignore_case)
   call neoview#fzf#run(arg)
 endfunction
 
+" Show all tags of the current buffer.
+function! FindBufTag()
+  let arg = neoview#fzf#buf_tags_arg()
+  let arg.fzf_win = 'botright %40split | set winfixheight'
+  let arg.preview_win = 'above %100split'
+  let arg.opt = arg.opt .
+    \ '--vim-noinfo --no-bold --color=fg+:0,bg+:159,hl+:196,hl:172'
+  call neoview#fzf#run(arg)
+endfunction
+
 " Find tag name in g:cur_prj_tagnames file.
 function! FindTagName()
   function! ViewTagName(ctx, final)
@@ -511,10 +521,8 @@ inoremap <M-F9> <C-o><C-o>
 inoremap <M-F10> <C-o><C-i>
 
 " F10 - browse buffer tags
-nnoremap <F10> :call fzf#vim#buffer_tags('',
-  \ { 'options': '--bind=tab:down' })<CR>
-inoremap <F10> <Esc>:call fzf#vim#buffer_tags('',
-  \ { 'options': '--bind=tab:down' })<CR>
+nnoremap <F10> :call FindBufTag()<CR>
+inoremap <F10> <Esc>:call FindBufTag()<CR>
 
 " Shift-F10 - browse all tags
 let g:nvimp_fzf_tags_layout = { "down":"~40%" }
