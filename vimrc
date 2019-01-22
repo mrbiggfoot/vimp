@@ -609,7 +609,7 @@ set cmdheight=1 " 1 screen lines to use for the command-line
 set ruler " show the cursor position all the time
 set hid " allow to change buffer without saving
 set shortmess=atI " shortens messages to avoid 'press a key' prompt
-set lazyredraw " do not redraw while executing macros (much faster)
+"set lazyredraw " do not redraw while executing macros (much faster)
 set display+=lastline " for easy browse last line with wrap text
 set laststatus=2 " always have status-line
 set winminheight=0 winminwidth=0 " sane window resizing behavior
