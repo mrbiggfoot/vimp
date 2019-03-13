@@ -3,23 +3,20 @@
 PRJ_META_ROOT=~/projects/.meta
 CUR_PRJ_META_ROOT=$PRJ_META_ROOT$(pwd)
 CUR_PRJ_SETTINGS=$CUR_PRJ_META_ROOT/project_settings.sh
-CUR_PRJ_BRANCH_META_ROOT=$CUR_PRJ_META_ROOT/$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
-CUR_PRJ_FILES=${CUR_PRJ_BRANCH_META_ROOT}/files
-CUR_PRJ_CTAGS=${CUR_PRJ_BRANCH_META_ROOT}/tags
-CUR_PRJ_TAGNAMES=${CUR_PRJ_BRANCH_META_ROOT}/tagnames
+CUR_PRJ_FILES=${CUR_PRJ_META_ROOT}/files
+CUR_PRJ_CTAGS=${CUR_PRJ_META_ROOT}/tags
+CUR_PRJ_TAGNAMES=${CUR_PRJ_META_ROOT}/tagnames
 
 print_usage()
 {
 	echo
-	echo "project_generate.sh [ mkdir | edit | gtags | clean | cleanall ]"
+	echo "project_generate.sh [ mkdir | edit | gtags | clean ]"
 	echo "If none of the following is specified, update the current project's metadata."
 	echo
 	echo "  * If 'mkdir' is specified, creates the project's metadata directory."
 	echo "  * If 'edit' is specified, runs vim to edit the project settings."
 	echo "  * If 'gtags' is specified, generates GNU Global tags."
-	echo "  * If 'clean' is specified, deletes metadata of all the dead branches."
-	echo "  * If 'cleanall' is specified, deletes metadata of all the branches"
-	echo "    except the current one."
+	echo "  * If 'clean' is specified, deletes all metadata of the current project."
 	echo
 	exit
 }
@@ -66,7 +63,7 @@ write_project_settings()
 generate_gtags()
 {
 	echo Generate gtags
-	GTAGSFORCECPP=1 gtags -i -f $CUR_PRJ_FILES $CUR_PRJ_BRANCH_META_ROOT
+	GTAGSFORCECPP=1 gtags -i -f $CUR_PRJ_FILES $CUR_PRJ_META_ROOT
 }
 
 if [ $# -eq 1 ]; then
@@ -85,21 +82,9 @@ if [ $# -eq 1 ]; then
 		vim $CUR_PRJ_SETTINGS
 	elif [ "$1" == 'gtags' ]; then
 		generate_gtags
-	elif [ "$1" == 'cleanall' ]; then
-		echo Delete all branches metadata except the current one:
-		echo $CUR_PRJ_BRANCH_META_ROOT
-		find $CUR_PRJ_META_ROOT -maxdepth 1 ! -path "$CUR_PRJ_BRANCH_META_ROOT" ! -path "$CUR_PRJ_META_ROOT" -type d | xargs rm -Rf
 	elif [ "$1" == 'clean' ]; then
-		echo Delete all dead branches
-		for dir in `find $CUR_PRJ_META_ROOT -maxdepth 1 ! -path "$CUR_PRJ_BRANCH_META_ROOT" ! -path "$CUR_PRJ_META_ROOT" -type d -printf %f"\n"`
-		do
-			git branch | grep "$dir"
-			if [ $? -ne 0 ]; then
-				DELETE_BRANCH=$CUR_PRJ_META_ROOT/$dir
-				echo Delete $DELETE_BRANCH
-				rm -Rf $DELETE_BRANCH
-			fi
-		done
+		echo Delete all project metadata
+		rm $CUR_PRJ_FILES $CUR_PRJ_CTAGS $CUR_PRJ_TAGNAMES
 	else
 		print_usage
 	fi
@@ -110,8 +95,13 @@ if [ $# -ne 0 ]; then
 	print_usage
 fi
 
-echo Create metadata in $CUR_PRJ_BRANCH_META_ROOT
-mkdir -p $CUR_PRJ_BRANCH_META_ROOT
+echo Create metadata in $CUR_PRJ_META_ROOT
+mkdir -p $CUR_PRJ_META_ROOT
+
+if [ ! -f $CUR_PRJ_SETTINGS ]; then
+	write_project_settings > $CUR_PRJ_SETTINGS
+	vim $CUR_PRJ_SETTINGS
+fi
 
 source $CUR_PRJ_SETTINGS
 

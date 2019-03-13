@@ -149,18 +149,17 @@ function! s:configure_project()
   " prj_meta_root must be an absolute path, or 'lid' won't work
   let prj_meta_root = $VIMP_PROJECTS_META_ROOT
   let cur_prj_root = getcwd()
-  let cur_prj_branch = system('git rev-parse --abbrev-ref HEAD 2>/dev/null')
-  let cur_prj_branch = substitute(cur_prj_branch, '\n', '', '')
-  let cur_prj_meta_root = prj_meta_root . cur_prj_root . '/' . cur_prj_branch
+  "let cur_prj_branch = system('git rev-parse --abbrev-ref HEAD 2>/dev/null')
+  "let cur_prj_branch = substitute(cur_prj_branch, '\n', '', '')
+  let cur_prj_meta_root = prj_meta_root . cur_prj_root
 
-  let g:cur_prj_settings_sh =
-    \ prj_meta_root . cur_prj_root . '/project_settings.sh'
+  let g:cur_prj_settings_sh = cur_prj_meta_root . '/project_settings.sh'
 
   if isdirectory(cur_prj_meta_root)
     let g:cur_prj_tags = cur_prj_meta_root . "/tags"
     let g:cur_prj_tagnames = cur_prj_meta_root . "/tagnames"
 
-    " The following line is needed for project files opener key mapping
+    " The following line is needed for project files opener
     let g:cur_prj_files = cur_prj_meta_root . "/files"
 
     exec "set tags=" . g:cur_prj_tags . ";"
