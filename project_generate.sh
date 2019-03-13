@@ -82,7 +82,7 @@ if [ $# -eq 1 ]; then
 			echo $CUR_PRJ_SETTINGS created, edit it if required.
 		fi
 	elif [ "$1" == 'edit' ]; then
-		nvim $CUR_PRJ_SETTINGS
+		vim $CUR_PRJ_SETTINGS
 	elif [ "$1" == 'gtags' ]; then
 		generate_gtags
 	elif [ "$1" == 'cleanall' ]; then
