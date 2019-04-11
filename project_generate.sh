@@ -2,21 +2,27 @@
 
 PRJ_META_ROOT=~/projects/.meta
 CUR_PRJ_META_ROOT=$PRJ_META_ROOT$(pwd)
+#CUR_PRJ_BRANCH_META_ROOT=$CUR_PRJ_META_ROOT/$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+
 CUR_PRJ_SETTINGS=$CUR_PRJ_META_ROOT/project_settings.sh
 CUR_PRJ_FILES=${CUR_PRJ_META_ROOT}/files
 CUR_PRJ_CTAGS=${CUR_PRJ_META_ROOT}/tags
 CUR_PRJ_TAGNAMES=${CUR_PRJ_META_ROOT}/tagnames
 
+#SRC_COMPILE_CMDS=$(pwd)/build/compile_commands.json
+#CUR_PRJ_COMPILE_CMDS=${CUR_PRJ_BRANCH_META_ROOT}/compile_commands.json
+
 print_usage()
 {
 	echo
-	echo "project_generate.sh [ mkdir | edit | gtags | clean ]"
+	echo "project_generate.sh [ mkdir | edit | gtags | clean | cleanall ]"
 	echo "If none of the following is specified, update the current project's metadata."
 	echo
-	echo "  * If 'mkdir' is specified, creates the project's metadata directory."
-	echo "  * If 'edit' is specified, runs vim to edit the project settings."
-	echo "  * If 'gtags' is specified, generates GNU Global tags."
-	echo "  * If 'clean' is specified, deletes all metadata of the current project."
+	echo "  mkdir    : create the project's metadata directory."
+	echo "  edit     : run vim to edit the project settings."
+	echo "  gtags    : generate GNU Global tags."
+	echo "  clean    : delete all metadata of the current project except the settings."
+	echo "  cleanall : delete all metadata of the current project."
 	echo
 	exit
 }
@@ -83,8 +89,11 @@ if [ $# -eq 1 ]; then
 	elif [ "$1" == 'gtags' ]; then
 		generate_gtags
 	elif [ "$1" == 'clean' ]; then
-		echo Delete all project metadata
+		echo Delete all project metadata except settings
 		rm $CUR_PRJ_FILES $CUR_PRJ_CTAGS $CUR_PRJ_TAGNAMES
+	elif [ "$1" == 'cleanall' ]; then
+		echo Delete all project metadata
+		rm $CUR_PRJ_FILES $CUR_PRJ_CTAGS $CUR_PRJ_TAGNAMES $CUR_PRJ_SETTINGS
 	else
 		print_usage
 	fi
