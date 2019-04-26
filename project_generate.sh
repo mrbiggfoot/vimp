@@ -4,14 +4,16 @@ PRJ_META_ROOT=~/projects/.meta
 CUR_PRJ_META_ROOT=$PRJ_META_ROOT$(pwd)
 CUR_PRJ_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
 
-if [ ! -z "$CUR_PRJ_BRANCH" ]; then
-	CUR_PRJ_META_ROOT=$CUR_PRJ_META_ROOT/$CUR_PRJ_BRANCH
+if [ -z "$CUR_PRJ_BRANCH" ]; then
+	CUR_PRJ_BRANCH_META_ROOT=$CUR_PRJ_META_ROOT
+else
+	CUR_PRJ_BRANCH_META_ROOT=$CUR_PRJ_META_ROOT/$CUR_PRJ_BRANCH
 fi
 
-CUR_PRJ_SETTINGS=$CUR_PRJ_META_ROOT/project_settings.sh
-CUR_PRJ_FILES=${CUR_PRJ_META_ROOT}/files
-CUR_PRJ_CTAGS=${CUR_PRJ_META_ROOT}/tags
-CUR_PRJ_TAGNAMES=${CUR_PRJ_META_ROOT}/tagnames
+CUR_PRJ_SETTINGS=$CUR_PRJ_BRANCH_META_ROOT/project_settings.sh
+CUR_PRJ_FILES=${CUR_PRJ_BRANCH_META_ROOT}/files
+CUR_PRJ_CTAGS=${CUR_PRJ_BRANCH_META_ROOT}/tags
+CUR_PRJ_TAGNAMES=${CUR_PRJ_BRANCH_META_ROOT}/tagnames
 
 #SRC_COMPILE_CMDS=$(pwd)/build/compile_commands.json
 #CUR_PRJ_COMPILE_CMDS=${CUR_PRJ_BRANCH_META_ROOT}/compile_commands.json
@@ -25,8 +27,8 @@ print_usage()
 	echo "  mkdir    : create the project's metadata directory."
 	echo "  edit     : run vim to edit the project settings."
 	echo "  gtags    : generate GNU Global tags."
-	echo "  clean    : delete all metadata of the current project except the settings."
-	echo "  cleanall : delete all metadata of the current project."
+	echo "  clean    : delete metadata of all the dead branches."
+	echo "  cleanall : delete metadata of all the branches except the current one."
 	echo
 	exit
 }
@@ -73,14 +75,14 @@ write_project_settings()
 generate_gtags()
 {
 	echo Generate gtags
-	GTAGSFORCECPP=1 gtags -i -f $CUR_PRJ_FILES $CUR_PRJ_META_ROOT
+	GTAGSFORCECPP=1 gtags -i -f $CUR_PRJ_FILES $CUR_PRJ_BRANCH_META_ROOT
 }
 
 if [ $# -eq 1 ]; then
 	if [ "$1" == 'mkdir' ]; then
 		echo Create project metadata dir:
-		echo $CUR_PRJ_META_ROOT
-		mkdir -p $CUR_PRJ_META_ROOT
+		echo $CUR_PRJ_BRANCH_META_ROOT
+		mkdir -p $CUR_PRJ_BRANCH_META_ROOT
 		echo Project settings:
 		if [ -f $CUR_PRJ_SETTINGS ]; then
 			echo $CUR_PRJ_SETTINGS already exists.
@@ -93,11 +95,20 @@ if [ $# -eq 1 ]; then
 	elif [ "$1" == 'gtags' ]; then
 		generate_gtags
 	elif [ "$1" == 'clean' ]; then
-		echo Delete all project metadata except settings
-		rm $CUR_PRJ_FILES $CUR_PRJ_CTAGS $CUR_PRJ_TAGNAMES
+		echo Delete all dead branches
+		for dir in `find $CUR_PRJ_META_ROOT -maxdepth 1 ! -path "$CUR_PRJ_BRANCH_META_ROOT" ! -path "$CUR_PRJ_META_ROOT" -type d -printf %f"\n"`
+		do
+			git branch | grep "$dir"
+			if [ $? -ne 0 ]; then
+				DELETE_BRANCH=$CUR_PRJ_META_ROOT/$dir
+				echo Delete $DELETE_BRANCH
+				rm -Rf $DELETE_BRANCH
+			fi
+		done
 	elif [ "$1" == 'cleanall' ]; then
-		echo Delete all project metadata
-		rm $CUR_PRJ_FILES $CUR_PRJ_CTAGS $CUR_PRJ_TAGNAMES $CUR_PRJ_SETTINGS
+		echo Delete all branches metadata except the current one:
+		echo $CUR_PRJ_BRANCH_META_ROOT
+		find $CUR_PRJ_META_ROOT -maxdepth 1 ! -path "$CUR_PRJ_BRANCH_META_ROOT" ! -path "$CUR_PRJ_META_ROOT" -type d | xargs rm -Rf
 	else
 		print_usage
 	fi
@@ -108,8 +119,8 @@ if [ $# -ne 0 ]; then
 	print_usage
 fi
 
-echo Create metadata in $CUR_PRJ_META_ROOT
-mkdir -p $CUR_PRJ_META_ROOT
+echo Create metadata in $CUR_PRJ_BRANCH_META_ROOT
+mkdir -p $CUR_PRJ_BRANCH_META_ROOT
 
 if [ ! -f $CUR_PRJ_SETTINGS ]; then
 	write_project_settings | vim -c "file $CUR_PRJ_SETTINGS | set filetype=sh" -
