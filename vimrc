@@ -149,9 +149,13 @@ function! s:configure_project()
   " prj_meta_root must be an absolute path, or 'lid' won't work
   let prj_meta_root = $VIMP_PROJECTS_META_ROOT
   let cur_prj_root = getcwd()
-  "let cur_prj_branch = system('git rev-parse --abbrev-ref HEAD 2>/dev/null')
-  "let cur_prj_branch = substitute(cur_prj_branch, '\n', '', '')
   let cur_prj_meta_root = prj_meta_root . cur_prj_root
+
+  let cur_prj_branch = system('git rev-parse --abbrev-ref HEAD 2>/dev/null')
+  let cur_prj_branch = substitute(cur_prj_branch, '\n', '', '')
+  if !empty(cur_prj_branch)
+    let cur_prj_meta_root = cur_prj_meta_root . '/' . cur_prj_branch
+  endif
 
   let g:cur_prj_settings_sh = cur_prj_meta_root . '/project_settings.sh'
 

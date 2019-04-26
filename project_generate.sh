@@ -2,7 +2,11 @@
 
 PRJ_META_ROOT=~/projects/.meta
 CUR_PRJ_META_ROOT=$PRJ_META_ROOT$(pwd)
-#CUR_PRJ_BRANCH_META_ROOT=$CUR_PRJ_META_ROOT/$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+CUR_PRJ_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+
+if [ ! -z "$CUR_PRJ_BRANCH" ]; then
+	CUR_PRJ_META_ROOT=$CUR_PRJ_META_ROOT/$CUR_PRJ_BRANCH
+fi
 
 CUR_PRJ_SETTINGS=$CUR_PRJ_META_ROOT/project_settings.sh
 CUR_PRJ_FILES=${CUR_PRJ_META_ROOT}/files
@@ -33,7 +37,7 @@ write_project_settings()
 	echo
 	echo "# Directories to be included"
 	echo "PRJ_DIRS=("
-	find . -maxdepth 1 ! -path "*/\.*" ! -path "*\~" ! -path "." -type d -printf "\t\"%f\"\n"
+	find . -maxdepth 1 ! -path "*/\.*" ! -path "*\~" ! -path "." -type d | sort | xargs -n1 basename | awk '{ print "\t\"" $0 "\"" }'
 	echo ")"
 	echo
 	echo "# Make the argument string for ripgrep"
@@ -108,10 +112,14 @@ echo Create metadata in $CUR_PRJ_META_ROOT
 mkdir -p $CUR_PRJ_META_ROOT
 
 if [ ! -f $CUR_PRJ_SETTINGS ]; then
-	write_project_settings > $CUR_PRJ_SETTINGS
-	vim $CUR_PRJ_SETTINGS
+	write_project_settings | vim -c "file $CUR_PRJ_SETTINGS | set filetype=sh" -
 fi
 
+if [ ! -f $CUR_PRJ_SETTINGS ]; then
+	echo No project settings $CUR_PRJ_SETTINGS
+	echo Aborting
+	exit
+fi
 source $CUR_PRJ_SETTINGS
 
 # Generate list of project files
