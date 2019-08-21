@@ -140,9 +140,9 @@ eval $CMD
 
 # Generate ctags
 echo Generate ctags
-CTAGS_OPT="--tag-relative=yes --c++-kinds=+p --fields=+iaS --extra=+q --languages=c,c++,c#,python,vim,html,lua,javascript,java,protobuf,go"
+CTAGS_OPT="--tag-relative=yes --c++-kinds=+p --fields=+iaS"
 ctags -o $CUR_PRJ_CTAGS $CTAGS_OPT -L $CUR_PRJ_FILES
 
 # Generate tag names
 echo Generate tag names
-grep -v "^\!" $CUR_PRJ_CTAGS | awk '{ if (length($1) > 3) print $1 }' | grep -v "::" | sort | uniq >$CUR_PRJ_TAGNAMES
+grep -v "^\!" $CUR_PRJ_CTAGS | awk '{ if (length($1) > 3) print $1 }' | grep -v "::\|\." | sort | uniq >$CUR_PRJ_TAGNAMES
