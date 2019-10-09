@@ -60,8 +60,6 @@ else
   let g:mucomplete#chains.unite = []
   set shortmess+=c   " Shut off completion messages
   set belloff+=ctrlg " If Vim beeps during completion
-  inoremap <expr><right> pumvisible() ? "<C-y><right>" : "<right>"
-  inoremap <expr><end> pumvisible() ? "<C-y><end>" : "<end>"
 endif
 
 " neoview
