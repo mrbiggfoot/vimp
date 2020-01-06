@@ -21,7 +21,7 @@ Plug 'junegunn/fzf.vim'
 
 Plug 'vim-scripts/a.vim'
 Plug 'Yggdroot/indentLine'
-Plug 'w0rp/ale'
+Plug 'dense-analysis/ale'
 Plug 'vim-python/python-syntax'
 
 Plug 'mrbiggfoot/vim-cpp-enhanced-highlight'
