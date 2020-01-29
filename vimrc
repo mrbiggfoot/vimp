@@ -335,10 +335,10 @@ nnoremap <S-Up> <C-w><Up>
 nnoremap <S-Down> <C-w><Down>
 
 " Move from the neovim terminal window to other neovim windows
-tnoremap <S-Left> <C-w><Left>
-tnoremap <S-Right> <C-w><Right>
-tnoremap <S-Up> <C-w><Up>
-tnoremap <S-Down> <C-w><Down>
+tnoremap <S-Left> <C-w>h
+tnoremap <S-Right> <C-w>l
+tnoremap <S-Up> <C-w>k
+tnoremap <S-Down> <C-w>j
 
 " Enhance '<' '>' - do not need to reselect the block after shift it.
 vnoremap < <gv
