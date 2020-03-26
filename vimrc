@@ -23,6 +23,7 @@ Plug 'vim-scripts/a.vim'
 Plug 'Yggdroot/indentLine'
 Plug 'dense-analysis/ale'
 Plug 'vim-python/python-syntax'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 Plug 'mrbiggfoot/vim-cpp-enhanced-highlight'
 Plug 'mrbiggfoot/my-colors-light'
@@ -134,6 +135,9 @@ augroup end
 " python-syntax
 let g:python_version_2 = 1
 let g:python_highlight_all = 1
+
+" vim-go
+let g:go_fmt_autosave = 0
 
 "------------------------------------------------------------------------------
 " Projects configuration
