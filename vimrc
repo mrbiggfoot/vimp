@@ -24,6 +24,7 @@ Plug 'Yggdroot/indentLine'
 Plug 'dense-analysis/ale'
 Plug 'vim-python/python-syntax'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'zchee/vim-flatbuffers'
 
 Plug 'mrbiggfoot/vim-cpp-enhanced-highlight'
 Plug 'mrbiggfoot/my-colors-light'
