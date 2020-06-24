@@ -62,7 +62,7 @@ write_project_settings()
 	echo "done"
 	echo
 	echo "# File types to include in the project"
-	echo "PRJ_FILE_TYPES=(\"c\" \"cpp\" \"protobuf\" \"py\")"
+	echo "PRJ_FILE_TYPES=(\"c\" \"cpp\" \"protobuf\" \"flatbuffers\" \"py\")"
 	echo
 	echo "# Make the argument string for ripgrep"
 	echo "PRJ_FILE_TYPES_ARG="
