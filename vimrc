@@ -27,7 +27,11 @@ Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'zchee/vim-flatbuffers'
 
 Plug 'mrbiggfoot/vim-cpp-enhanced-highlight'
-Plug 'mrbiggfoot/my-colors-light'
+if $VIMP_COLOR_SCHEME == 'solarized_dark'
+  Plug 'lifepillar/vim-solarized8'
+else
+  Plug 'mrbiggfoot/my-colors-light'
+endif
 
 Plug 'Shougo/unite.vim'
 if exists('s:deoplete') && has('python3')
@@ -696,7 +700,12 @@ set timeoutlen=500 ttimeoutlen=0
 
 " Enable syntax highlighting. In iTerm2, select 'Light Background' palette.
 syntax on
-colorscheme my_colors_light
+if $VIMP_COLOR_SCHEME == 'solarized_dark'
+  set background=dark
+  colorscheme solarized8
+else
+  colorscheme my_colors_light
+endif
 
 " Status line
 function! BufJobSign()
