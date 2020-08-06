@@ -702,6 +702,10 @@ set timeoutlen=500 ttimeoutlen=0
 syntax on
 if $VIMP_COLOR_SCHEME == 'solarized_dark'
   set background=dark
+
+  " https://superuser.com/questions/1284561/why-is-vim-starting-in-replace-mode
+  set t_u7=
+
   colorscheme solarized8
 else
   colorscheme my_colors_light
