@@ -1,6 +1,11 @@
 #!/bin/bash
 
-PRJ_META_ROOT=~/projects/.meta
+if [ -z "$VIMP_PROJECTS_META_ROOT" ]; then
+	PRJ_META_ROOT=~/projects/.meta
+else
+	PRJ_META_ROOT=$VIMP_PROJECTS_META_ROOT
+fi
+
 CUR_PRJ_META_ROOT=$PRJ_META_ROOT$(pwd)
 CUR_PRJ_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
 

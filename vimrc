@@ -154,7 +154,11 @@ endif
 
 function! s:configure_project()
   " prj_meta_root must be an absolute path, or 'lid' won't work
-  let prj_meta_root = $VIMP_PROJECTS_META_ROOT
+  if !empty($VIMP_PROJECTS_META_ROOT)
+    let prj_meta_root = $VIMP_PROJECTS_META_ROOT
+  else
+    let prj_meta_root = $HOME . '/projects/.meta'
+  endif
   let cur_prj_root = getcwd()
   let cur_prj_meta_root = prj_meta_root . cur_prj_root
 
