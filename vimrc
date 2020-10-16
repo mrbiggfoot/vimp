@@ -513,6 +513,11 @@ inoremap <silent> <Esc>[1;3R <Esc>:History:<CR>
 " F4 - toggle paste mode
 set pastetoggle=<F4>
 
+" F5 - show syntax highlighting group under cursor
+map <F5> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name")
+  \ . '> trans<' . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+  \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+
 " Shift-F7 - toggle indent guides
 nmap <S-F7> :IndentLinesToggle<CR>
 imap <S-F7> <C-o>:IndentLinesToggle<CR>
