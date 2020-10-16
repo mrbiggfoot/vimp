@@ -7,7 +7,7 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 " Deoplete/mucomplete switch.
-"let s:deoplete = 1
+let s:deoplete = 1
 
 "------------------------------------------------------------------------------
 " Load plugins.
