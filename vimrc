@@ -667,7 +667,7 @@ set cinoptions=>s,e0,n0,f0,{0,}0,^0,:0,=s,l0,b0,g0,hs,ps,ts,is,+s,c3,C0,0,
   \(0,us,U0,w0,W0,m0,j0,)20,*30
 
 " File type specific indent settings
-autocmd FileType c,cpp,proto,fbs,python,cmake,conf,javascript,java,vim
+autocmd FileType c,cpp,proto,fbs,python,cmake,conf,javascript,java,vim,json
   \ setlocal sw=2 ts=2 sts=2 expandtab autoindent
 
 " Disable line numbers and color column in quickfix window, also enable wrap.
