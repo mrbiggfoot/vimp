@@ -44,6 +44,8 @@ sudo make install
 
 ## Installation
 
+- Use terminal config (`dconf load /org/mate/terminal/ < mate-terminal.conf` for mate-terminal)
+- Use the `inputrc` and `screenrc` files
 - Add the following line to your .vimrc (assuming vimp is checked out in the
   home dir): `source ~/vimp/vimrc`
 - [Install vim-plug](https://github.com/junegunn/vim-plug#installation)
