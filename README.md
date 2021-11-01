@@ -30,17 +30,22 @@ Build:
 git clone https://github.com/vim/vim.git
 cd vim/src
 make distclean  # if you built Vim before
-./configure --with-features=huge --enable-pythoninterp --without-x --enable-gui=no --enable-python3interp --with-python3-config-dir=/usr/lib/python3.8/config-3.8-aarch64-linux-gnu/
+./configure --with-features=huge --enable-pythoninterp --without-x --enable-gui=no --enable-python3interp --with-python3-config-dir=/usr/lib/python3.9/config-3.9-x86_64-linux-gnu/
 make
 sudo make install
 ```
 
 ## Prerequisites
 
-- [ctags](https://github.com/mrbiggfoot/exuberant-ctags) with protobuf support
+- [vim-plug](https://github.com/junegunn/vim-plug)
+- [ctags](https://github.com/universal-ctags/ctags)
 - [ripgrep](https://github.com/BurntSushi/ripgrep)
+- Make sure [look](http://manpages.ubuntu.com/manpages/jammy/man1/look.1.html) is available for [neoview](https://github.com/mrbiggfoot/neoview)
 
 ## Installation
 
-Add the following line to your .vimrc (assuming vimp is checked out in the
-home dir): `source ~/vimp/vimrc`
+- Add the following line to your .vimrc (assuming vimp is checked out in the
+  home dir): `source ~/vimp/vimrc`
+- [Install vim-plug](https://github.com/junegunn/vim-plug#installation)
+- Start vim and run `PlugInstall`
+- Restart shell
