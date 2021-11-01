@@ -333,6 +333,13 @@ endif
 nnoremap <C-Left> b
 nnoremap <C-Right> w
 
+" Alt-w - delete word
+inoremap <Esc>w <C-w>
+inoremap <C-h> <C-w>
+
+" Alt-backspace - delete everything to the left of the cursor
+inoremap <Esc><bs> <C-u>
+
 " Opt-up|down scrolling
 nnoremap <Esc>[1;9B <C-e>
 nnoremap <Esc>[1;9A <C-y>
@@ -404,6 +411,9 @@ nnoremap 11 :call SwapWindowWith(1)<CR>
 nnoremap 22 :call SwapWindowWith(2)<CR>
 nnoremap 33 :call SwapWindowWith(3)<CR>
 nnoremap 44 :call SwapWindowWith(4)<CR>
+
+" Start terminal in the current window
+nnoremap tt :terminal ++curwin<CR>
 
 nnoremap <leader>8 :vertical resize 90<CR>
 

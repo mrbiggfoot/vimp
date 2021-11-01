@@ -1,0 +1,4 @@
+$include /etc/inputrc
+"\C-h": backward-kill-word
+"\ew": backward-kill-word
+"\e\177": backward-kill-line
