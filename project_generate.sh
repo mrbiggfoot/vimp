@@ -140,7 +140,7 @@ source $CUR_PRJ_SETTINGS
 
 # Generate list of project files
 echo Generate list of project files
-CMD="rg --type-add 'protobuf:*.proto.client' $PRJ_FILE_TYPES_ARG $PRJ_DIRS_EXCLUDE_ARG --files $PRJ_DIRS_ARG | sort > $CUR_PRJ_FILES"
+CMD="rg --follow --type-add 'protobuf:*.proto.client' $PRJ_FILE_TYPES_ARG $PRJ_DIRS_EXCLUDE_ARG --files $PRJ_DIRS_ARG | sort > $CUR_PRJ_FILES"
 eval $CMD
 
 # Generate ctags

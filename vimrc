@@ -197,7 +197,7 @@ endfunction
 " Finds the pattern either in the project files or in all files, based on
 " the 'in_project' value.
 function! FindPattern(pattern, in_project, ripgrep_opt)
-  let rg_opt = "--colors 'path:fg:blue' --colors 'path:style:bold' " .
+  let rg_opt = "--follow --colors 'path:fg:blue' --colors 'path:style:bold' " .
     \ a:ripgrep_opt
   if a:in_project && filereadable(g:cur_prj_settings_sh)
     let rg_opt = rg_opt . ' $PRJ_FILE_TYPES_ARG $PRJ_DIRS_EXCLUDE_ARG'
@@ -301,7 +301,7 @@ endfunction
 
 " Find file name either in the project files or in 'rg --files' output.
 function! FindFile(in_project)
-  let arg = neoview#fzf#ripgrep_files_arg('')
+  let arg = neoview#fzf#ripgrep_files_arg('--follow')
   if a:in_project && exists("g:cur_prj_files")
     let arg.source = 'cat ' . g:cur_prj_files
   endif
