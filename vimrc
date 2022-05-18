@@ -709,18 +709,25 @@ autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") |
   \ exe "normal! g'\"" | endif
 
 " Highlight lines >= 80 chars and trailing whitespaces
-function! HighlightFormatting()
+function! HighlightFormatting(enable)
   if &filetype == 'cpp' || &filetype == 'c' || &filetype == 'proto' ||
   \ &filetype == 'python' || &filetype == 'cmake' || &filetype == 'vim' ||
   \ &filetype == 'javascript' || &filetype == 'java' || &filetype == 'go' ||
   \ &filetype == 'fbs'
-"    highlight OverLength ctermbg=red ctermfg=white
-"    match OverLength /\%80v.\+/
-    highlight WhiteSpaceEOL ctermbg=gray
-    2match WhiteSpaceEOL /\s\+$/
+    if a:enable
+      "highlight OverLength ctermbg=red ctermfg=white
+      "match OverLength /\%80v.\+/
+      highlight WhiteSpaceEOL ctermbg=gray
+      2match WhiteSpaceEOL /\s\+$/
+    else
+      "highlight WhiteSpaceEOL ctermbg=none
+      2match none
+    endif
   endif
 endfunction
-autocmd BufNewFile,BufReadPost,WinEnter * call HighlightFormatting()
+"autocmd BufNewFile,BufReadPost,WinEnter * call HighlightFormatting()
+autocmd InsertEnter * call HighlightFormatting(1)
+autocmd InsertLeave * call HighlightFormatting(0)
 
 function! SetColorColumn(enable)
   if &filetype == 'cpp' || &filetype == 'c' || &filetype == 'proto' ||
