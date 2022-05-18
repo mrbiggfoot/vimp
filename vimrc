@@ -124,11 +124,13 @@ let g:ale_lint_delay = 1000
 
 " Disable ALE until the first insert mode entering
 let g:ale_enabled = 0
-autocmd InsertEnter * if !exists('g:first_insert') | let g:first_insert = 1 |
+autocmd InsertEnter * if !exists('g:no_ale') | let g:no_ale = 1 |
   \ ALEEnable | endif
 
 if filereadable("./.ale_cfg.vim")
   silent source ./.ale_cfg.vim
+else
+  let g:no_ale = 1
 endif
 
 augroup ALEProgress
@@ -602,6 +604,11 @@ inoremap <silent> <F12>
 nnoremap <silent> <S-F12>
   \ :call FindPattern(expand("<cword>"), v:true, '-w')<CR>
 inoremap <silent> <S-F12>
+  \ <Esc>:call FindPattern(expand("<cword>"), v:true, '-w')<CR>
+
+nnoremap <silent> <Esc>[24;2~
+  \ :call FindPattern(expand("<cword>"), v:true, '-w')<CR>
+inoremap <silent> <Esc>[24;2~
   \ <Esc>:call FindPattern(expand("<cword>"), v:true, '-w')<CR>
 
 " Ctrl-P or Alt-P - open list of files, prefer in project
