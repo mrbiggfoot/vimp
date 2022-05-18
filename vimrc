@@ -509,6 +509,8 @@ inoremap <silent> <Esc>[1;2Q <Esc>:call FindTagNameRefs()<CR>
 " Cmd-F2 - search lines in the current buffer
 nnoremap <silent> <Esc>[1;3Q :call FindBufLine()<CR>
 inoremap <silent> <Esc>[1;3Q <Esc>:call FindBufLine()<CR>
+nnoremap <silent> <Esc><Esc>OQ :call FindBufLine()<CR>
+inoremap <silent> <Esc><Esc>OQ <Esc>:call FindBufLine()<CR>
 
 " F3 - browse buffers
 let s:f3_cmd = StartOrCloseUniteCallCmd('Unite -previewheight=100 buffer')
@@ -519,6 +521,8 @@ exec 'tnoremap <silent> <F3> <C-\><C-n>' . s:f3_cmd
 " Cmd-F3 - commands history
 nnoremap <silent> <Esc>[1;3R :History:<CR>
 inoremap <silent> <Esc>[1;3R <Esc>:History:<CR>
+nnoremap <silent> <Esc><Esc>OR :History:<CR>
+inoremap <silent> <Esc><Esc>OR <Esc>:History:<CR>
 
 " F4 - toggle paste mode
 set pastetoggle=<F4>
@@ -531,6 +535,8 @@ map <F5> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name")
 " Shift-F7 - toggle indent guides
 nmap <S-F7> :IndentLinesToggle<CR>
 imap <S-F7> <C-o>:IndentLinesToggle<CR>
+nmap <Esc>[18;2~ :IndentLinesToggle<CR>
+imap <Esc>[18;2~ <C-o>:IndentLinesToggle<CR>
 
 " F7 - toggle color column
 function! ToggleColorColumn()
@@ -550,6 +556,8 @@ inoremap <F8> <C-o>:noh<CR>
 " S-F8 - clear match in the current window
 nnoremap <S-F8> :match none<CR>
 inoremap <S-F8> <C-o>:match none<CR>
+nnoremap <Esc>[19;2~ :match none<CR>
+inoremap <Esc>[19;2~ <C-o>:match none<CR>
 
 " F9 - history
 let g:history_layout = { "down":"~40%" }
@@ -562,6 +570,11 @@ nnoremap <M-F10> <C-i>
 inoremap <M-F9> <C-o><C-o>
 inoremap <M-F10> <C-o><C-i>
 
+nnoremap <Esc><Esc>[20~ <C-o>
+nnoremap <Esc><Esc>[21~ <C-i>
+inoremap <Esc><Esc>[20~ <C-o><C-o>
+inoremap <Esc><Esc>[21~ <C-o><C-i>
+
 " F10 - browse buffer tags
 nnoremap <F10> :call FindBufTag()<CR>
 inoremap <F10> <Esc>:call FindBufTag()<CR>
@@ -571,6 +584,11 @@ let g:nvimp_fzf_tags_layout = { "down":"~40%" }
 nnoremap <S-F10> :call FzfWindow(g:nvimp_fzf_tags_layout, "Tags", 1)<CR>
 inoremap <S-F10> <Esc>:call FzfWindow(g:nvimp_fzf_tags_layout, "Tags", 1)<CR>
 
+nnoremap <Esc>[21;2~
+  \ :call FzfWindow(g:nvimp_fzf_tags_layout, "Tags", 1)<CR>
+inoremap <Esc>[21;2~
+  \ <Esc>:call FzfWindow(g:nvimp_fzf_tags_layout, "Tags", 1)<CR>
+
 " F11 - toggle neoview window
 nnoremap <silent> <F11> :call neoview#fzf#run({})<CR>
 tnoremap <silent> <F11> <C-\><C-n> :call neoview#fzf#run({})<CR>
@@ -579,12 +597,6 @@ tnoremap <silent> <F11> <C-\><C-n> :call neoview#fzf#run({})<CR>
 nnoremap <silent> <F12> :call FindTag(expand("<cword>"), v:true, v:false)<CR>
 inoremap <silent> <F12>
   \ <Esc>:call FindTag(expand("<cword>"), v:true, v:false)<CR>
-
-" Cmd-F12 - find definitions of the word under cursor, prefer local tags
-nnoremap <silent> <M-F12>
-  \ :call FindTag(expand("<cword>"), v:false, v:false)<CR>
-inoremap <silent> <M-F12>
-  \ <Esc>:call FindTag(expand("<cword>"), v:false, v:false)<CR>
 
 " Shift-F12 - find the whole word under cursor in the project files
 nnoremap <silent> <S-F12>
