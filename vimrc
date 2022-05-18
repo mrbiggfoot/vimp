@@ -379,8 +379,8 @@ vnoremap > >gv
 nnoremap <leader>q :Bwipeout<CR>
 
 " Alt-c - copy to X clipboard.
-vnoremap <silent> ç :<C-u>silent '<,'>w !xclip -selection clipboard<CR>
-nnoremap <silent> ç V:<C-u>silent '<,'>w !xclip -selection clipboard<CR>
+vnoremap <silent> ç :<C-u>silent '<,'>w !xsel --clipboard<CR>
+nnoremap <silent> ç V:<C-u>silent '<,'>w !xsel --clipboard<CR>
 
 " Alt-/ - switch to correspondent header/source file
 nnoremap ÷ :A<CR>
