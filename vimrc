@@ -592,9 +592,11 @@ nnoremap <silent> <S-F12>
 inoremap <silent> <S-F12>
   \ <Esc>:call FindPattern(expand("<cword>"), v:true, '-w')<CR>
 
-" Ctrl-P - open list of files, prefer in project
+" Ctrl-P or Alt-P - open list of files, prefer in project
 nnoremap <silent> <C-p> :call FindFile(v:true)<CR>
 inoremap <silent> <C-p> <Esc>:call FindFile(v:true)<CR>
+nnoremap <silent> π :call FindFile(v:true)<CR>
+inoremap <silent> π <Esc>:call FindFile(v:true)<CR>
 
 " Alt-Shift-P - open list of all files
 nnoremap <silent> ∏ :call FindFile(v:false)<CR>
