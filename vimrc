@@ -199,12 +199,19 @@ endfunction
 function! FindPattern(pattern, in_project, ripgrep_opt)
   let rg_opt = "--follow --colors 'path:fg:blue' --colors 'path:style:bold' " .
     \ a:ripgrep_opt
-  if a:in_project && filereadable(g:cur_prj_settings_sh)
-    let rg_opt = rg_opt . ' $PRJ_FILE_TYPES_ARG $PRJ_DIRS_EXCLUDE_ARG'
-    let arg = neoview#fzf#ripgrep_arg(a:pattern, rg_opt)
-    let arg.source = 'source ' . g:cur_prj_settings_sh . ' && ' .
-      \ 'eval "' . arg.source . ' $PRJ_DIRS_ARG"'
-  else
+  if a:in_project
+    if exists('g:cur_prj_files') && filereadable(g:cur_prj_files)
+      let arg = neoview#fzf#ripgrep_arg(a:pattern, rg_opt)
+      let arg.source = 'xargs -d ''\n'' -a "' . g:cur_prj_files .
+        \ '" ' . arg.source
+    elseif filereadable(g:cur_prj_settings_sh)
+      let rg_opt = rg_opt . ' $PRJ_FILE_TYPES_ARG $PRJ_DIRS_EXCLUDE_ARG'
+      let arg = neoview#fzf#ripgrep_arg(a:pattern, rg_opt)
+      let arg.source = 'source ' . g:cur_prj_settings_sh . ' && ' .
+        \ 'eval "' . arg.source . ' $PRJ_DIRS_ARG"'
+    endif
+  endif
+  if !exists('arg')
     let arg = neoview#fzf#ripgrep_arg(a:pattern, rg_opt)
   endif
   let arg.fzf_win = 'botright %40split | set winfixheight'
