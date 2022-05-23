@@ -17,7 +17,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'moll/vim-bbye'
 Plug 'mrbiggfoot/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'mrbiggfoot/neoview'
-Plug 'junegunn/fzf.vim'
+Plug 'mrbiggfoot/fzf.vim'
 
 Plug 'vim-scripts/a.vim'
 Plug 'Yggdroot/indentLine'
