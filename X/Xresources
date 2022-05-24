@@ -1,0 +1,23 @@
+! Font settings
+!xterm*font: -adobe-courier-medium-r-*-*-14-*-*-*-*-*-*-*
+xterm*faceName: DejaVu Sans Mono
+xterm*faceSize: 9
+xterm*renderFont: true
+xterm*forceBoxChars: true
+
+! Window settings
+xterm*internalBorder: 4
+xterm*rightScrollBar: true
+xterm*ScrollBar: false
+
+! Color settings
+*customization: -color
+XTerm*termName: xterm-256color
+
+! Keyboard shortcuts
+XTerm*vt100.translations: #override \
+    Mod1 <Key>C: copy-selection(CLIPBOARD) \n\
+    Mod1 <Key>V: insert-selection(CLIPBOARD)
+
+Xft.antialias: true
+Xft.hinting: true

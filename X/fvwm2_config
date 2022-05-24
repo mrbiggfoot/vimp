@@ -1,0 +1,27 @@
+
+EdgeResistance 250 10
+EdgeScroll 100 100
+ClickTime 750
+
+DesktopSize 1x1
+MenuStyle * Font -adobe-times-bold-r-*-*-24-*-*-*-*-*-*-*
+
+Style * ClickToFocus
+
+# Keyboard shortcuts
+Key f		A		M	FuncFvwmMaximize
+Key m		A		M	FuncFvwmUnmaximize
+Key Tab		A		C	WindowList Root c c NoDeskSort
+
+# Functions
+DestroyFunc FuncFvwmMaximize
+AddToFunc FuncFvwmMaximize
++ I WindowStyle !Title, !Handles, BorderWidth 0, HandleWidth 0
++ I RefreshWindow
++ I Maximize True 100 100
+
+DestroyFunc FuncFvwmUnmaximize
+AddToFunc FuncFvwmUnmaximize
++ I WindowStyle Title, Handles, BorderWidth 7, HandleWidth 7
++ I RefreshWindow
++ I Maximize False
