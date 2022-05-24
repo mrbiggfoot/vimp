@@ -162,22 +162,24 @@ function! s:configure_project()
     let prj_meta_root = $HOME . '/projects/.meta'
   endif
   let cur_prj_root = getcwd()
-  let cur_prj_meta_root = prj_meta_root . cur_prj_root
+  let g:cur_prj_meta_root = prj_meta_root . cur_prj_root
 
   let cur_prj_branch = system('git rev-parse --abbrev-ref HEAD 2>/dev/null')
   let cur_prj_branch = substitute(cur_prj_branch, '\n', '', '')
   if !empty(cur_prj_branch)
-    let cur_prj_meta_root = cur_prj_meta_root . '/' . cur_prj_branch
+    let g:cur_prj_meta_root = g:cur_prj_meta_root . '/' . cur_prj_branch
   endif
 
-  let g:cur_prj_settings_sh = cur_prj_meta_root . '/project_settings.sh'
+  let g:cur_prj_settings_sh = g:cur_prj_meta_root . '/project_settings.sh'
 
-  if isdirectory(cur_prj_meta_root)
-    let g:cur_prj_tags = cur_prj_meta_root . "/tags"
-    let g:cur_prj_tagnames = cur_prj_meta_root . "/tagnames"
+  if isdirectory(g:cur_prj_meta_root)
+    let g:cur_prj_tags = g:cur_prj_meta_root . "/tags"
+    let g:cur_prj_tagnames = g:cur_prj_meta_root . "/tagnames"
+    let g:cur_prj_gtags = g:cur_prj_meta_root . "/GTAGS"
+    let g:cur_prj_grtags = g:cur_prj_meta_root . "/GRTAGS"
 
     " The following line is needed for project files opener
-    let g:cur_prj_files = cur_prj_meta_root . "/files"
+    let g:cur_prj_files = g:cur_prj_meta_root . "/files"
 
     exec "set tags=" . g:cur_prj_tags . ";"
   endif
@@ -185,8 +187,8 @@ endfunction
 
 call s:configure_project()
 
-function! s:update_project()
-  exec '!' . s:vimp_path . '/project_generate.sh'
+function! s:update_project(args)
+  exec '!' . s:vimp_path . '/project_generate.sh ' . a:args
   call s:configure_project()
 endfunction
 
@@ -220,6 +222,32 @@ function! FindPattern(pattern, in_project, ripgrep_opt)
     \ '--no-sort --vim --no-prompt --info=hidden --no-bold
     \ --color=fg+:0,bg+:159,hl+:196,hl:172'
   call neoview#fzf#run(arg)
+endfunction
+
+" Find references
+function! FindRefs(tagname, ignore_case)
+  let case_flag = ''
+  if a:ignore_case
+    let case_flag = '-i '
+  endif
+  if !exists('g:cur_prj_gtags') || !filereadable(g:cur_prj_gtags)
+    call FindPattern(a:tagname, v:true, case_flag . '-w')
+    return
+  endif
+  let global_cmd = 'GTAGSROOT=`pwd` GTAGSDBPATH="' . g:cur_prj_meta_root .
+    \ '" global --color=always --literal --result=grep ' . case_flag
+  let arg = {
+    \ 'source' : global_cmd . '-sr ' . a:tagname . '; ' .
+    \   global_cmd . '-d ' . a:tagname,
+    \ 'view_fn' : function('neoview#view_file_line'),
+    \ 'tag' : 'Refs',
+    \ 'fzf_win' : 'botright %40split | set winfixheight',
+    \ 'preview_win' : 'above %100split'
+    \ }
+  let arg.opt =
+    \ '--no-sort --vim --no-prompt --info=hidden --no-bold --ansi
+    \ --color=fg+:0,bg+:159,hl+:196,hl:172'
+ call neoview#fzf#run(arg)
 endfunction
 
 " Find tag, either in g:cur_prj_tags (if in_project is set) or b:compl_tags.
@@ -607,15 +635,21 @@ nnoremap <silent> <F12> :call FindTag(expand("<cword>"), v:true, v:false)<CR>
 inoremap <silent> <F12>
   \ <Esc>:call FindTag(expand("<cword>"), v:true, v:false)<CR>
 
-" Shift-F12 - find the whole word under cursor in the project files
+" Shift-F12 - find the whole word under cursor, use gtags if they exist
 nnoremap <silent> <S-F12>
-  \ :call FindPattern(expand("<cword>"), v:true, '-w')<CR>
+  \ :call FindRefs(expand("<cword>"), v:false)<CR>
 inoremap <silent> <S-F12>
-  \ <Esc>:call FindPattern(expand("<cword>"), v:true, '-w')<CR>
+  \ <Esc>:call FindRefs(expand("<cword>"), v:false)<CR>
 
 nnoremap <silent> <Esc>[24;2~
-  \ :call FindPattern(expand("<cword>"), v:true, '-w')<CR>
+  \ :call FindRefs(expand("<cword>"), v:false)<CR>
 inoremap <silent> <Esc>[24;2~
+  \ <Esc>:call FindRefs(expand("<cword>"), v:false)<CR>
+
+" Cmd-F12 - find the whole word under cursor in the project files
+nnoremap <silent> <Esc><Esc>[24~
+  \ :call FindPattern(expand("<cword>"), v:true, '-w')<CR>
+inoremap <silent> <Esc><Esc>[24~
   \ <Esc>:call FindPattern(expand("<cword>"), v:true, '-w')<CR>
 
 " Ctrl-P or Alt-P - open list of files, prefer in project
@@ -651,11 +685,29 @@ command! -bang -nargs=1 -complete=tag FWC
 command! -bang -nargs=1 -complete=tag FCW
   \ :call FindPattern(shellescape(<q-args>), !<bang>0, '-i -w')
 
-" FT - find an exact word in the tags database (case insensitive)
-command! -nargs=1 -complete=tag FT :call FindTag(<q-args>, v:true, v:false)
+" FT - find an exact word in the ctags database (ignore case)
+command! -nargs=1 -complete=tag FT
+  \ :call FindTag(shellescape(<q-args>), v:true, v:false)
 
-" Up - update project metadata
-command! -nargs=0 Up :call s:update_project()
+" FR - find reference in gtags database (case sensitive)
+command! -nargs=1 -complete=tag FR
+  \ :call FindRefs(shellescape(<q-args>), v:false)
+
+" FRC - find reference in gtags database (ignore case)
+command! -nargs=1 -complete=tag FRC
+  \ :call FindRefs(shellescape(<q-args>), v:true)
+
+" Up - update project metadata (file list and ctags)
+command! -nargs=0 Up :call s:update_project("")
+
+" Uc - update project's ctags
+command! -nargs=0 Uc :call s:update_project("ctags")
+
+" Ug - update project's gtags
+command! -nargs=0 Ug :call s:update_project("gtags")
+
+" Ut - update project's ctags and gtags
+command! -nargs=0 Ut :call s:update_project("tags")
 
 "------------------------------------------------------------------------------
 " Misc configuration

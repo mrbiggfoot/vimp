@@ -26,12 +26,15 @@ CUR_PRJ_TAGNAMES=${CUR_PRJ_BRANCH_META_ROOT}/tagnames
 print_usage()
 {
 	echo
-	echo "project_generate.sh [ mkdir | edit | gtags | clean | cleanall ]"
-	echo "If none of the following is specified, update the current project's metadata."
+	echo "project_generate.sh [ mkdir | edit | [c|g]tags | clean[all] ]"
+	echo "If none of the following is specified, update the current project's"
+	echo "file list and ctags."
 	echo
 	echo "  mkdir    : create the project's metadata directory."
 	echo "  edit     : run vim to edit the project settings."
+	echo "  ctags    : generate Universal ctags."
 	echo "  gtags    : generate GNU Global tags."
+	echo "  tags     : generate Universal and GNU Global tags."
 	echo "  clean    : delete metadata of all the dead branches."
 	echo "  cleanall : delete metadata of all the branches except the current one."
 	echo
@@ -77,6 +80,18 @@ write_project_settings()
 	echo "done"
 }
 
+generate_ctags()
+{
+	# Generate ctags
+	echo Generate ctags
+	CTAGS_OPT="--tag-relative=yes --c++-kinds=+p --fields=+iaS --map-protobuf=+.client"
+	ctags -o $CUR_PRJ_CTAGS $CTAGS_OPT -L $CUR_PRJ_FILES
+
+	# Generate tag names
+	echo Generate tag names
+	grep -v "^\!" $CUR_PRJ_CTAGS | awk '{ if (length($1) > 3) print $1 }' | grep -v "::\|\." | sort | uniq >$CUR_PRJ_TAGNAMES
+}
+
 generate_gtags()
 {
 	echo Generate gtags
@@ -97,7 +112,12 @@ if [ $# -eq 1 ]; then
 		fi
 	elif [ "$1" == 'edit' ]; then
 		vim $CUR_PRJ_SETTINGS
+	elif [ "$1" == 'ctags' ]; then
+		generate_ctags
 	elif [ "$1" == 'gtags' ]; then
+		generate_gtags
+	elif [ "$1" == 'tags' ]; then
+		generate_ctags
 		generate_gtags
 	elif [ "$1" == 'clean' ]; then
 		echo Delete all dead branches
@@ -143,11 +163,4 @@ echo Generate list of project files
 CMD="rg --follow --type-add 'protobuf:*.proto.client' $PRJ_FILE_TYPES_ARG $PRJ_DIRS_EXCLUDE_ARG --files $PRJ_DIRS_ARG | sort > $CUR_PRJ_FILES"
 eval $CMD
 
-# Generate ctags
-echo Generate ctags
-CTAGS_OPT="--tag-relative=yes --c++-kinds=+p --fields=+iaS --map-protobuf=+.client"
-ctags -o $CUR_PRJ_CTAGS $CTAGS_OPT -L $CUR_PRJ_FILES
-
-# Generate tag names
-echo Generate tag names
-grep -v "^\!" $CUR_PRJ_CTAGS | awk '{ if (length($1) > 3) print $1 }' | grep -v "::\|\." | sort | uniq >$CUR_PRJ_TAGNAMES
+generate_ctags
