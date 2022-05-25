@@ -9,6 +9,9 @@ endif
 " Deoplete/mucomplete switch.
 let s:deoplete = 1
 
+" Whether gtags should be autoupdated on write.
+let g:gtags_auto_update = 1
+
 "------------------------------------------------------------------------------
 " Load plugins.
 "------------------------------------------------------------------------------
@@ -462,7 +465,17 @@ nnoremap 44 :call SwapWindowWith(4)<CR>
 " Start terminal in the current window
 nnoremap tt :terminal ++curwin<CR>
 
+" Make window 90 chars wide
 nnoremap <leader>8 :vertical resize 90<CR>
+
+" Make windows dimensions the same
+nnoremap <leader>= <C-w>=
+
+" Redraw the screen
+nnoremap <leader>r :redraw!<CR>
+
+" Cmd-w acts as Ctrl-w in normal mode
+nnoremap <Esc>w <C-w>
 
 function! DupRight()
   let l:cur_wnd = winnr()
@@ -819,6 +832,16 @@ autocmd BufWinEnter,WinEnter * if &buftype == 'terminal' && mode() == 'n' |
 
 " No line numbers in terminal window
 autocmd TerminalOpen * setlocal nonumber norelativenumber
+
+" Update gtags using the current buffer. Gtags have to be present.
+function! GtagsUpdate()
+  if g:gtags_auto_update == 1 && exists('g:cur_prj_gtags') &&
+    \ filereadable(g:cur_prj_gtags)
+      call system('GTAGSROOT=`pwd` GTAGSDBPATH="' . g:cur_prj_meta_root .
+        \ '" global -u --single-update="' . expand("%") . '"')
+  endif
+endfunction
+autocmd BufWritePost * call GtagsUpdate()
 
 set timeoutlen=500 ttimeoutlen=0
 
