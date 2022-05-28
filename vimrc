@@ -75,15 +75,25 @@ let g:neoview_fzf_common_opt = '--reverse --bind=tab:down
 tnoremap <expr><silent> <C-Up> neoview#is_search_win() ? "\<C-s>" : "\<C-Up>"
 tnoremap <expr><silent> <C-Down> neoview#is_search_win() ?
   \ "\<C-x>" : "\<C-Down>"
+
 " Opt-. and Opt-; preview scrolling (1 line)
 tnoremap <silent> … <C-\><C-n>
   \ :call neoview#feed_keys_to_preview("\<lt>C-y>")<CR>
 tnoremap <silent> ≥ <C-\><C-n>
   \ :call neoview#feed_keys_to_preview("\<lt>C-e>")<CR>
+tnoremap <silent> <Esc>; <C-\><C-n>
+  \ :call neoview#feed_keys_to_preview("\<lt>C-y>")<CR>
+tnoremap <silent> <Esc>. <C-\><C-n>
+  \ :call neoview#feed_keys_to_preview("\<lt>C-e>")<CR>
+
 " Opt-, and Opt-l preview scrolling (page)
 tnoremap <silent> ¬ <C-\><C-n>
   \ :call neoview#feed_keys_to_preview("\<lt>PageUp>")<CR>
 tnoremap <silent> ≤ <C-\><C-n>
+  \ :call neoview#feed_keys_to_preview("\<lt>PageDown>")<CR>
+tnoremap <silent> <Esc>l <C-\><C-n>
+  \ :call neoview#feed_keys_to_preview("\<lt>PageUp>")<CR>
+tnoremap <silent> <Esc>, <C-\><C-n>
   \ :call neoview#feed_keys_to_preview("\<lt>PageDown>")<CR>
 
 " Unite
