@@ -404,6 +404,18 @@ nnoremap <C-Up> <C-y>
 inoremap <C-Down> <C-x><C-e>
 inoremap <C-Up> <C-x><C-y>
 
+" Cmd-up|down for page up/down
+nnoremap <Esc>[1;3A <C-b>
+nnoremap <Esc>[1;3B <C-f>
+inoremap <Esc>[1;3A <C-o><C-b>
+inoremap <Esc>[1;3B <C-o><C-f>
+
+" Cmd-left|right for moving to beginning/end of line
+nnoremap <Esc>[1;3D <Home>
+nnoremap <Esc>[1;3C <End>
+inoremap <Esc>[1;3D <Home>
+inoremap <Esc>[1;3C <End>
+
 " Window navigation: Shift-arrows
 inoremap <S-Left> <C-o><C-w><Left>
 inoremap <S-Right> <C-o><C-w><Right>
