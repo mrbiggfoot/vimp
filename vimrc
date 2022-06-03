@@ -349,7 +349,7 @@ endfunction
 
 " Find file name either in the project files or in 'rg --files' output.
 function! FindFile(in_project)
-  let arg = neoview#fzf#ripgrep_files_arg('--follow')
+  let arg = neoview#fzf#ripgrep_files_arg('--follow 2>/dev/null')
   if a:in_project && exists("g:cur_prj_files")
     let arg.source = 'cat ' . g:cur_prj_files
   endif
