@@ -1,7 +1,7 @@
 ! Font settings
 !xterm*font: -adobe-courier-medium-r-*-*-14-*-*-*-*-*-*-*
 xterm*faceName: DejaVu Sans Mono
-xterm*faceSize: 9
+xterm*faceSize: 10
 xterm*renderFont: true
 xterm*forceBoxChars: true
 
