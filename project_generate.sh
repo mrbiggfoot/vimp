@@ -95,7 +95,7 @@ generate_ctags()
 generate_gtags()
 {
 	echo Generate gtags
-	GTAGSFORCECPP=1 gtags -i -f $CUR_PRJ_FILES $CUR_PRJ_BRANCH_META_ROOT
+	GTAGSFORCECPP=1 gtags -f $CUR_PRJ_FILES $CUR_PRJ_BRANCH_META_ROOT
 }
 
 if [ $# -eq 1 ]; then
