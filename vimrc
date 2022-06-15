@@ -752,6 +752,7 @@ set backspace=indent,eol,start
 
 " Catch mouse events
 set mouse=a
+set ttymouse=sgr
 
 " Disable wrapping
 set nowrap
