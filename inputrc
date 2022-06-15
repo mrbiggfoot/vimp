@@ -2,3 +2,5 @@ $include /etc/inputrc
 "\C-h": backward-kill-word
 "\ew": backward-kill-word
 "\e\177": backward-kill-line
+"\e[1;3D": beginning-of-line
+"\e[1;3C": end-of-line

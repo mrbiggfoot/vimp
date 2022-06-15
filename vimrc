@@ -385,7 +385,6 @@ nnoremap <C-Right> w
 
 " Alt-w - delete word
 inoremap <Esc>w <C-w>
-inoremap <C-h> <C-w>
 
 " Alt-backspace - delete everything to the left of the cursor
 inoremap <Esc><bs> <C-u>
