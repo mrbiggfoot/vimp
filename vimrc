@@ -21,6 +21,7 @@ Plug 'moll/vim-bbye'
 Plug 'mrbiggfoot/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'mrbiggfoot/neoview'
 Plug 'mrbiggfoot/fzf.vim'
+Plug 'mrbiggfoot/vim-oscyank'
 
 Plug 'vim-scripts/a.vim'
 Plug 'Yggdroot/indentLine'
@@ -442,6 +443,10 @@ nnoremap <leader>q :Bwipeout<CR>
 " Alt-c - copy to X clipboard.
 vnoremap <silent> ç :<C-u>silent '<,'>w !xsel --clipboard<CR>
 nnoremap <silent> ç V:<C-u>silent '<,'>w !xsel --clipboard<CR>
+
+" Alt-Shift-c - copy to clipboard via OSC 52
+vnoremap <silent> Ç :<C-u>'<,'>OSCYank<CR>
+nnoremap <silent> Ç V:<C-u>'<,'>OSCYank<CR>
 
 " Alt-/ - switch to correspondent header/source file
 nnoremap ÷ :A<CR>
