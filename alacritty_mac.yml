@@ -114,6 +114,9 @@ key_bindings:
   - { key: Key8, mods: Command, chars: "\x1b8" }
   - { key: Key9, mods: Command, chars: "\x1b9" }
 
+  # vim
+  - { key: C, mods: Option, chars: "Ç" }
+
 colors:
   primary:
     background: '#ffffff'
