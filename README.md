@@ -51,3 +51,5 @@ sudo make install
 - [Install vim-plug](https://github.com/junegunn/vim-plug#installation)
 - Start vim and run `PlugInstall`
 - Restart shell
+- Add this to .bashrc to make the terminal window title show current directory:
+  `PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s\007" "${PWD/#$HOME/\~}"'`
