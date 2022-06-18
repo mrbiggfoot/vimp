@@ -68,6 +68,7 @@ mouse:
   hide_when_typing: true
 
 key_bindings:
+  - { key: N, mods: Alt, action: SpawnNewInstance }
   - { key: W, mods: Alt, chars: "\x17" }
 
   - { key: Back, mods: Control, chars: "\x17" }
