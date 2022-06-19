@@ -113,6 +113,7 @@ key_bindings:
   - { key: P, mods: Alt, chars: "π" }
   - { key: P, mods: Alt|Shift, chars: "∏" }
   - { key: P, mods: Alt|Shift, chars: "∏" }
+  - { key: Slash, mods: Alt, chars: "÷" }
   - { key: 43, mods: Shift|Control, chars: "»" }
 
 colors:
