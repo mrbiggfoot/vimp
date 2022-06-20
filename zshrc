@@ -1,6 +1,8 @@
 export CLICOLOR=1
 export PROMPT='%B%F{green}%m%f:%F{magenta}%~%f%b %# '
 
+precmd () { print -Pn "\e]2;%~\a" } # title bar prompt
+
 # alacritty
 bindkey "^[[1;3C" end-of-line
 bindkey "^[[1;3D" beginning-of-line
