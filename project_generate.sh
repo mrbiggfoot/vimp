@@ -50,6 +50,17 @@ write_project_settings()
 	find . -maxdepth 1 ! -path "*/\.*" ! -path "*\~" ! -path "." -type d | sort | xargs -n1 basename | awk '{ print "\t\"" $0 "\"" }'
 	echo ")"
 	echo
+	echo "# Default tags to be built on running 'project_generate.sh'"
+	echo "# Possible values are: ctags, gtags, none, all"
+	echo "PRJ_TAGS=ctags"
+	echo
+	echo "# Tags type to generate tag names from: ctags, gtags or none"
+	echo "PRJ_TAG_NAMES=ctags"
+	echo
+	echo "# Number of parallel instances to use by pgtags/pglobal"
+	echo "# 0 disables parallelizing and uses the regular gtags/global"
+	echo "PRJ_GTAGS_NUM_INSTANCES=0"
+	echo
 	echo "# Make the argument string for ripgrep"
 	echo "PRJ_DIRS_ARG="
 	echo "for dir in \"\${PRJ_DIRS[@]}\""
@@ -82,20 +93,34 @@ write_project_settings()
 
 generate_ctags()
 {
-	# Generate ctags
 	echo Generate ctags
 	CTAGS_OPT="--tag-relative=yes --c++-kinds=+p --fields=+iaS --map-protobuf=+.client"
 	ctags -o $CUR_PRJ_CTAGS $CTAGS_OPT -L $CUR_PRJ_FILES
 
-	# Generate tag names
-	echo Generate tag names
-	grep -v "^\!" $CUR_PRJ_CTAGS | awk '{ if (length($1) > 3) print $1 }' | grep -v "::\|\." | sort | uniq >$CUR_PRJ_TAGNAMES
+	if [ "$PRJ_TAG_NAMES" == 'ctags' ]; then
+		echo Generate tag names from ctags
+		grep -a -v "^\!" $CUR_PRJ_CTAGS | awk '{ if (length($1) > 3) print $1 }' | grep -v "::\|\." | sort | uniq >$CUR_PRJ_TAGNAMES
+	fi
 }
 
 generate_gtags()
 {
 	echo Generate gtags
-	GTAGSFORCECPP=1 gtags -i -t -f $CUR_PRJ_FILES $CUR_PRJ_BRANCH_META_ROOT
+	if [ "$PRJ_GTAGS_NUM_INSTANCES" -eq 0 ]; then
+		GTAGSFORCECPP=1 gtags -i -t -f $CUR_PRJ_FILES $CUR_PRJ_BRANCH_META_ROOT
+
+		if [ "$PRJ_TAG_NAMES" == 'gtags' ]; then
+			echo Generate tag names from gtags
+			GTAGSROOT=`pwd` GTAGSDBPATH="$CUR_PRJ_BRANCH_META_ROOT" global --print-all 4 | sort | uniq >$CUR_PRJ_TAGNAMES
+		fi
+	else
+		GTAGSFORCECPP=1 pgtags -n $PRJ_GTAGS_NUM_INSTANCES -d $CUR_PRJ_BRANCH_META_ROOT $CUR_PRJ_FILES -i -t
+
+		if [ "$PRJ_TAG_NAMES" == 'gtags' ]; then
+			echo Generate tag names from gtags
+			pglobal -n $PRJ_GTAGS_NUM_INSTANCES $CUR_PRJ_BRANCH_META_ROOT --print-all 4 | sort | uniq >$CUR_PRJ_TAGNAMES
+		fi
+	fi
 }
 
 if [ $# -eq 1 ]; then
@@ -163,4 +188,13 @@ echo Generate list of project files
 CMD="rg --follow --type-add 'protobuf:*.proto.client' $PRJ_FILE_TYPES_ARG $PRJ_DIRS_EXCLUDE_ARG --files $PRJ_DIRS_ARG | sort > $CUR_PRJ_FILES"
 eval $CMD
 
-generate_ctags
+if [ "$PRJ_TAGS"  == 'ctags' ]; then
+	generate_ctags
+elif [ "$PRJ_TAGS" == 'gtags' ]; then
+	generate_gtags
+elif [ "$PRJ_TAGS" == 'all' ]; then
+	generate_ctags
+	generate_gtags
+else
+	echo Skip tags generation \(PRJ_TAGS is "$PRJ_TAGS"\)
+fi
