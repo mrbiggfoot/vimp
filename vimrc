@@ -168,6 +168,27 @@ if has('vim_starting')
   let s:vimp_path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 endif
 
+" Read project config from g:cur_prj_settings_sh file
+function! ReadProjectConfig()
+  if !filereadable(g:cur_prj_settings_sh)
+    return
+  endif
+
+  let lines = readfile(g:cur_prj_settings_sh)
+  for line in lines
+    let str = matchstr(line, '^\s*PRJ_TAGS\s*=\s*\zs\w\+\ze\s*$')
+    if !empty(str)
+      let g:prj_tags_type = str
+    endif
+
+    let str = matchstr(line,
+      \ '^\s*PRJ_GTAGS_NUM_INSTANCES\s*=\s*\zs\d\+\ze\s*$')
+    if !empty(str)
+      let g:prj_gtags_num_instances = str
+    endif
+  endfor
+endfunction
+
 function! s:configure_project()
   " prj_meta_root must be an absolute path, or 'lid' won't work
   if !empty($VIMP_PROJECTS_META_ROOT)
@@ -197,6 +218,8 @@ function! s:configure_project()
 
     exec "set tags=" . g:cur_prj_tags . ";"
   endif
+
+  call ReadProjectConfig()
 endfunction
 
 call s:configure_project()
