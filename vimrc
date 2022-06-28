@@ -875,10 +875,21 @@ autocmd TerminalOpen * setlocal nonumber norelativenumber
 
 " Update gtags using the current buffer. Gtags have to be present.
 function! GtagsUpdate()
-  if g:gtags_auto_update == 1 && exists('g:cur_prj_gtags') &&
-    \ filereadable(g:cur_prj_gtags)
-      call system('GTAGSROOT=`pwd` GTAGSDBPATH="' . g:cur_prj_meta_root .
-        \ '" global -u --single-update="' . expand("%") . '"')
+  if g:gtags_auto_update == 1
+    if !exists('g:prj_gtags_num_instances') || g:prj_gtags_num_instances == 0
+      if exists('g:cur_prj_gtags') && filereadable(g:cur_prj_gtags)
+        call system('GTAGSROOT=`pwd` GTAGSDBPATH="' . g:cur_prj_meta_root .
+          \ '" global -u --single-update="' . expand("%") . '"')
+      endif
+    else
+      let dbpath = trim(system('pglobal_find_db -n ' .
+        \ g:prj_gtags_num_instances . ' ' . g:cur_prj_meta_root . ' ' .
+        \ expand("%")))
+      if !empty(dbpath)
+        call system('GTAGSROOT=`pwd` GTAGSDBPATH="' . dbpath .
+          \ '" global -u --single-update="' . expand("%") . '"')
+      endif
+    endif
   endif
 endfunction
 autocmd BufWritePost * call GtagsUpdate()
