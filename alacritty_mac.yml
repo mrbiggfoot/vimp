@@ -116,6 +116,7 @@ key_bindings:
 
   # vim
   - { key: C, mods: Option, chars: "Ç" }
+  - { key: P, mods: Command, chars: "π" }
 
 colors:
   primary:
