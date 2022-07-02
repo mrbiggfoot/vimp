@@ -124,6 +124,9 @@ generate_gtags()
 }
 
 if [ $# -eq 1 ]; then
+	if [ -f $CUR_PRJ_SETTINGS ]; then
+		source $CUR_PRJ_SETTINGS
+	fi
 	if [ "$1" == 'mkdir' ]; then
 		echo Create project metadata dir:
 		echo $CUR_PRJ_BRANCH_META_ROOT

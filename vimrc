@@ -168,13 +168,14 @@ if has('vim_starting')
   let s:vimp_path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 endif
 
-" Read project config from g:cur_prj_settings_sh file
+" Read project config from g:prj_settings_sh file
 function! ReadProjectConfig()
-  if !filereadable(g:cur_prj_settings_sh)
+  if !filereadable(g:prj_settings_sh)
+    let g:prj_tags_type = ''
     return
   endif
 
-  let lines = readfile(g:cur_prj_settings_sh)
+  let lines = readfile(g:prj_settings_sh)
   for line in lines
     let str = matchstr(line, '^\s*PRJ_TAGS\s*=\s*\zs\w\+\ze\s*$')
     if !empty(str)
@@ -196,30 +197,33 @@ function! s:configure_project()
   else
     let prj_meta_root = $HOME . '/projects/.meta'
   endif
-  let cur_prj_root = getcwd()
-  let g:cur_prj_meta_root = prj_meta_root . cur_prj_root
+  let prj_root = getcwd()
+  let g:prj_meta_root = prj_meta_root . prj_root
 
-  let cur_prj_branch = system('git rev-parse --abbrev-ref HEAD 2>/dev/null')
-  let cur_prj_branch = substitute(cur_prj_branch, '\n', '', '')
-  if !empty(cur_prj_branch)
-    let g:cur_prj_meta_root = g:cur_prj_meta_root . '/' . cur_prj_branch
+  let prj_branch = system('git rev-parse --abbrev-ref HEAD 2>/dev/null')
+  let prj_branch = substitute(prj_branch, '\n', '', '')
+  if !empty(prj_branch)
+    let g:prj_meta_root = g:prj_meta_root . '/' . prj_branch
   endif
 
-  let g:cur_prj_settings_sh = g:cur_prj_meta_root . '/project_settings.sh'
-
-  if isdirectory(g:cur_prj_meta_root)
-    let g:cur_prj_tags = g:cur_prj_meta_root . "/tags"
-    let g:cur_prj_tagnames = g:cur_prj_meta_root . "/tagnames"
-    let g:cur_prj_gtags = g:cur_prj_meta_root . "/GTAGS"
-    let g:cur_prj_grtags = g:cur_prj_meta_root . "/GRTAGS"
-
-    " The following line is needed for project files opener
-    let g:cur_prj_files = g:cur_prj_meta_root . "/files"
-
-    exec "set tags=" . g:cur_prj_tags . ";"
-  endif
+  let g:prj_settings_sh = g:prj_meta_root . '/project_settings.sh'
 
   call ReadProjectConfig()
+
+  if isdirectory(g:prj_meta_root)
+    let g:prj_ctags = g:prj_meta_root . "/tags"
+
+    let g:prj_tagnames = g:prj_meta_root . "/tagnames"
+
+    " Used only when g:prj_gtags_num_instances is 0
+    let g:prj_gtags = g:prj_meta_root . "/GTAGS"
+    let g:prj_grtags = g:prj_meta_root . "/GRTAGS"
+
+    " The following line is needed for project files opener
+    let g:prj_files = g:prj_meta_root . "/files"
+
+    exec "set tags=" . g:prj_ctags . ";"
+  endif
 endfunction
 
 call s:configure_project()
@@ -239,14 +243,14 @@ function! FindPattern(pattern, in_project, ripgrep_opt)
   let rg_opt = "--follow --colors 'path:fg:blue' --colors 'path:style:bold' " .
     \ a:ripgrep_opt
   if a:in_project
-    if exists('g:cur_prj_files') && filereadable(g:cur_prj_files)
+    if exists('g:prj_files') && filereadable(g:prj_files)
       let arg = neoview#fzf#ripgrep_arg(a:pattern, rg_opt)
-      let arg.source = 'xargs -d ''\n'' -a "' . g:cur_prj_files .
+      let arg.source = 'xargs -d ''\n'' -a "' . g:prj_files .
         \ '" ' . arg.source
-    elseif filereadable(g:cur_prj_settings_sh)
+    elseif filereadable(g:prj_settings_sh)
       let rg_opt = rg_opt . ' $PRJ_FILE_TYPES_ARG $PRJ_DIRS_EXCLUDE_ARG'
       let arg = neoview#fzf#ripgrep_arg(a:pattern, rg_opt)
-      let arg.source = 'source ' . g:cur_prj_settings_sh . ' && ' .
+      let arg.source = 'source ' . g:prj_settings_sh . ' && ' .
         \ 'eval "' . arg.source . ' $PRJ_DIRS_ARG"'
     endif
   endif
@@ -261,44 +265,44 @@ function! FindPattern(pattern, in_project, ripgrep_opt)
   call neoview#fzf#run(arg)
 endfunction
 
-" Find references
-function! FindRefs(tagname, ignore_case)
+" Find gtags, or call FindPattern() if g:prj_tags_type is not 'gtags'.
+" 'tagtype' can be 'd' for definitions, 'r' for references or empty string
+" for everything.
+function! FindGtags(tagname, tagtype, ignore_case)
   let case_flag = ''
   if a:ignore_case
     let case_flag = '-i '
   endif
-  if !exists('g:cur_prj_gtags') || !filereadable(g:cur_prj_gtags)
+  if g:prj_tags_type != 'gtags'
     call FindPattern(a:tagname, v:true, case_flag . '-w')
     return
   endif
-  let global_cmd = 'GTAGSROOT=`pwd` GTAGSDBPATH="' . g:cur_prj_meta_root .
-    \ '" global --color=always --literal --result=grep ' . case_flag
-  let arg = {
-    \ 'source' : global_cmd . '-sr ' . a:tagname . '; ' .
-    \   global_cmd . '-d ' . a:tagname,
-    \ 'view_fn' : function('neoview#view_file_line'),
-    \ 'tag' : 'Refs',
-    \ 'fzf_win' : 'botright %40split | set winfixheight',
-    \ 'preview_win' : 'above %100split'
-    \ }
-  let arg.opt =
-    \ '--no-sort --vim --no-prompt --info=hidden --no-bold --ansi
+  let arg = neoview#fzf#gtags_arg(g:prj_meta_root, g:prj_gtags_num_instances,
+    \ a:tagtype, case_flag . '--literal --color=always', a:tagname)
+  let arg.fzf_win = 'botright %40split | set winfixheight'
+  let arg.preview_win = 'above %100split'
+  let arg.opt = arg.opt .
+    \ '--vim --no-prompt --info=hidden --no-bold
     \ --color=fg+:0,bg+:159,hl+:196,hl:172'
- call neoview#fzf#run(arg)
+  call neoview#fzf#run(arg)
 endfunction
 
-" Find tag, either in g:cur_prj_tags (if in_project is set) or b:compl_tags.
+" Find tag, either in g:prj_ctags (if in_project is set) or b:compl_tags.
 function! FindTag(tagname, in_project, ignore_case)
+  if g:prj_tags_type == 'gtags'
+    call FindGtags(a:tagname, 'd', a:ignore_case)
+    return
+  endif
   if a:in_project
-    if exists('g:cur_prj_tags')
-      let tagfile = g:cur_prj_tags
+    if exists('g:prj_ctags') && filereadable(g:prj_ctags)
+      let tagfile = g:prj_ctags
     endif
   else
-    " If 'in_project' is not set, prefer b:compl_tags over g:cur_prj_tags.
-    if exists('b:compl_tags')
+    " If 'in_project' is not set, prefer b:compl_tags over g:prj_ctags.
+    if exists('b:compl_tags') && filereadable(b:compl_tags)
       let tagfile = b:compl_tags
-    elseif exists('g:cur_prj_tags')
-      let tagfile = g:cur_prj_tags
+    elseif exists('g:prj_ctags') && filereadable(g:prj_ctags)
+      let tagfile = g:prj_ctags
     endif
   endif
   if !exists('tagfile')
@@ -325,7 +329,7 @@ function! FindBufTag()
   call neoview#fzf#run(arg)
 endfunction
 
-" Find tag name in g:cur_prj_tagnames file.
+" Find tag name in g:prj_tagnames file.
 function! FindTagName()
   function! ViewTagName(ctx, final)
     if a:final
@@ -333,12 +337,12 @@ function! FindTagName()
     endif
   endfunction
 
-  if !exists('g:cur_prj_tagnames')
+  if !exists('g:prj_tagnames')
     echomsg "No tag names file!"
     return
   endif
   let arg = {
-    \ 'source' : 'cat ' . g:cur_prj_tagnames,
+    \ 'source' : 'cat ' . g:prj_tagnames,
     \ 'view_fn' : function('ViewTagName'),
     \ 'fzf_win' : 'above %40split | set winfixheight',
     \ 'preview_win' : 'below %100split',
@@ -352,16 +356,16 @@ endfunction
 function! FindTagNameRefs()
   function! ViewTagNameRefs(ctx, final)
     if a:final
-      call FindPattern(a:ctx[0], v:true, '-w')
+      call FindGtags(a:ctx[0], '', v:false)
     endif
   endfunction
 
-  if !exists('g:cur_prj_tagnames')
+  if !exists('g:prj_tagnames')
     echomsg "No tag names file!"
     return
   endif
   let arg = {
-    \ 'source' : 'cat ' . g:cur_prj_tagnames,
+    \ 'source' : 'cat ' . g:prj_tagnames,
     \ 'view_fn' : function('ViewTagNameRefs'),
     \ 'fzf_win' : 'above %40split | set winfixheight',
     \ 'preview_win' : 'below %100split',
@@ -374,8 +378,8 @@ endfunction
 " Find file name either in the project files or in 'rg --files' output.
 function! FindFile(in_project)
   let arg = neoview#fzf#ripgrep_files_arg('--follow 2>/dev/null')
-  if a:in_project && exists("g:cur_prj_files")
-    let arg.source = 'cat ' . g:cur_prj_files
+  if a:in_project && exists("g:prj_files")
+    let arg.source = 'cat ' . g:prj_files
   endif
   let arg.fzf_win = 'topleft %40split | set winfixheight'
   let arg.opt = arg.opt . '--inline-info'
@@ -699,14 +703,14 @@ inoremap <silent> <F12>
 
 " Shift-F12 - find the whole word under cursor, use gtags if they exist
 nnoremap <silent> <S-F12>
-  \ :call FindRefs(expand("<cword>"), v:false)<CR>
+  \ :call FindGtags(expand("<cword>"), '', v:false)<CR>
 inoremap <silent> <S-F12>
-  \ <Esc>:call FindRefs(expand("<cword>"), v:false)<CR>
+  \ <Esc>:call FindGtags(expand("<cword>"), '', v:false)<CR>
 
 nnoremap <silent> <Esc>[24;2~
-  \ :call FindRefs(expand("<cword>"), v:false)<CR>
+  \ :call FindGtags(expand("<cword>"), '', v:false)<CR>
 inoremap <silent> <Esc>[24;2~
-  \ <Esc>:call FindRefs(expand("<cword>"), v:false)<CR>
+  \ <Esc>:call FindGtags(expand("<cword>"), '', v:false)<CR>
 
 " Cmd-F12 - find the whole word under cursor in the project files
 nnoremap <silent> <Esc><Esc>[24~
@@ -747,17 +751,17 @@ command! -bang -nargs=1 -complete=tag FWC
 command! -bang -nargs=1 -complete=tag FCW
   \ :call FindPattern(shellescape(<q-args>), !<bang>0, '-i -w')
 
-" FT - find an exact word in the ctags database (ignore case)
+" FT - find an exact word in the ctags database (case sensitive)
 command! -nargs=1 -complete=tag FT
   \ :call FindTag(shellescape(<q-args>), v:true, v:false)
 
 " FR - find reference in gtags database (case sensitive)
 command! -nargs=1 -complete=tag FR
-  \ :call FindRefs(shellescape(<q-args>), v:false)
+  \ :call FindGtags(shellescape(<q-args>), '', v:false)
 
 " FRC - find reference in gtags database (ignore case)
 command! -nargs=1 -complete=tag FRC
-  \ :call FindRefs(shellescape(<q-args>), v:true)
+  \ :call FindGtags(shellescape(<q-args>), '', v:true)
 
 " Up - update project metadata (file list and ctags)
 command! -nargs=0 Up :call s:update_project("")
@@ -877,13 +881,13 @@ autocmd TerminalOpen * setlocal nonumber norelativenumber
 function! GtagsUpdate()
   if g:gtags_auto_update == 1
     if !exists('g:prj_gtags_num_instances') || g:prj_gtags_num_instances == 0
-      if exists('g:cur_prj_gtags') && filereadable(g:cur_prj_gtags)
-        call system('GTAGSROOT=`pwd` GTAGSDBPATH="' . g:cur_prj_meta_root .
+      if exists('g:prj_gtags') && filereadable(g:prj_gtags)
+        call system('GTAGSROOT=`pwd` GTAGSDBPATH="' . g:prj_meta_root .
           \ '" global -u --single-update="' . expand("%") . '"')
       endif
     else
       let dbpath = trim(system('pglobal_find_db -n ' .
-        \ g:prj_gtags_num_instances . ' ' . g:cur_prj_meta_root . ' ' .
+        \ g:prj_gtags_num_instances . ' ' . g:prj_meta_root . ' ' .
         \ expand("%")))
       if !empty(dbpath)
         call system('GTAGSROOT=`pwd` GTAGSDBPATH="' . dbpath .
