@@ -29,6 +29,7 @@ Plug 'dense-analysis/ale'
 Plug 'vim-python/python-syntax'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'zchee/vim-flatbuffers'
+Plug 'christoomey/vim-tmux-navigator'
 
 Plug 'mrbiggfoot/vim-cpp-enhanced-highlight'
 if $VIMP_COLOR_SCHEME == 'solarized_dark'
@@ -159,6 +160,21 @@ let g:python_highlight_all = 1
 
 " vim-go
 let g:go_fmt_autosave = 0
+
+" vim-tmux-navigator
+let g:tmux_navigator_no_mappings = 1
+
+nnoremap <silent> <S-Left> :TmuxNavigateLeft<cr>
+nnoremap <silent> <S-Down> :TmuxNavigateDown<cr>
+nnoremap <silent> <S-Up> :TmuxNavigateUp<cr>
+nnoremap <silent> <S-Right> :TmuxNavigateRight<cr>
+nnoremap <silent> <C-\> :TmuxNavigatePrevious<cr>
+
+inoremap <silent> <S-Left> <C-o>:TmuxNavigateLeft<cr>
+inoremap <silent> <S-Down> <C-o>:TmuxNavigateDown<cr>
+inoremap <silent> <S-Up> <C-o>:TmuxNavigateUp<cr>
+inoremap <silent> <S-Right> <C-o>:TmuxNavigateRight<cr>
+inoremap <silent> <C-\> <C-o>:TmuxNavigatePrevious<cr>
 
 "------------------------------------------------------------------------------
 " Projects configuration
@@ -443,16 +459,16 @@ nnoremap <Esc>[1;3C <End>
 inoremap <Esc>[1;3D <Home>
 inoremap <Esc>[1;3C <End>
 
-" Window navigation: Shift-arrows
-inoremap <S-Left> <C-o><C-w><Left>
-inoremap <S-Right> <C-o><C-w><Right>
-inoremap <S-Up> <C-o><C-w><Up>
-inoremap <S-Down> <C-o><C-w><Down>
+" Window navigation: Shift-arrows (see vim-tmux-navigator bindings above)
+"inoremap <S-Left> <C-o><C-w><Left>
+"inoremap <S-Right> <C-o><C-w><Right>
+"inoremap <S-Up> <C-o><C-w><Up>
+"inoremap <S-Down> <C-o><C-w><Down>
 
-nnoremap <S-Left> <C-w><Left>
-nnoremap <S-Right> <C-w><Right>
-nnoremap <S-Up> <C-w><Up>
-nnoremap <S-Down> <C-w><Down>
+"nnoremap <S-Left> <C-w><Left>
+"nnoremap <S-Right> <C-w><Right>
+"nnoremap <S-Up> <C-w><Up>
+"nnoremap <S-Down> <C-w><Down>
 
 " Move from the neovim terminal window to other neovim windows
 tnoremap <S-Left> <C-w>h
