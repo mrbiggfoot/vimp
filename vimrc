@@ -29,7 +29,7 @@ Plug 'dense-analysis/ale'
 Plug 'vim-python/python-syntax'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'zchee/vim-flatbuffers'
-Plug 'christoomey/vim-tmux-navigator'
+Plug 'mrbiggfoot/vim-tmux-navigator'
 
 Plug 'mrbiggfoot/vim-cpp-enhanced-highlight'
 if $VIMP_COLOR_SCHEME == 'solarized_dark'
@@ -163,6 +163,7 @@ let g:go_fmt_autosave = 0
 
 " vim-tmux-navigator
 let g:tmux_navigator_no_mappings = 1
+let g:tmux_navigator_no_wrap = 1
 
 nnoremap <silent> <S-Left> :TmuxNavigateLeft<cr>
 nnoremap <silent> <S-Down> :TmuxNavigateDown<cr>
