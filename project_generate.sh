@@ -26,11 +26,12 @@ CUR_PRJ_TAGNAMES=${CUR_PRJ_BRANCH_META_ROOT}/tagnames
 print_usage()
 {
 	echo
-	echo "project_generate.sh [ mkdir | edit | [c|g]tags | clean[all] ]"
+	echo "Usage: project_generate.sh [ options ]"
 	echo "If none of the following is specified, update the current project's"
-	echo "file list and ctags."
+	echo "file list and tags."
 	echo
 	echo "  mkdir    : create the project's metadata directory."
+	echo "  pwd      : print the project's metadata directory."
 	echo "  edit     : run vim to edit the project settings."
 	echo "  ctags    : generate Universal ctags."
 	echo "  gtags    : generate GNU Global tags."
@@ -137,6 +138,13 @@ if [ $# -eq 1 ]; then
 		else
 			write_project_settings > $CUR_PRJ_SETTINGS
 			echo $CUR_PRJ_SETTINGS created, edit it if required.
+		fi
+	elif [ "$1" == 'pwd' ]; then
+		if [ -d $CUR_PRJ_BRANCH_META_ROOT ]; then
+			echo $CUR_PRJ_BRANCH_META_ROOT
+		else
+			echo Project dir $CUR_PRJ_BRANCH_META_ROOT does not exist! >&2
+			exit 1
 		fi
 	elif [ "$1" == 'edit' ]; then
 		vim $CUR_PRJ_SETTINGS
