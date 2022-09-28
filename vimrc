@@ -27,7 +27,9 @@ Plug 'vim-scripts/a.vim'
 Plug 'Yggdroot/indentLine'
 Plug 'dense-analysis/ale'
 Plug 'vim-python/python-syntax'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+if v:version > 800 || (v:version == 800 && has('patch1453'))
+  Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+endif
 Plug 'zchee/vim-flatbuffers'
 Plug 'mrbiggfoot/vim-tmux-navigator'
 
@@ -58,7 +60,11 @@ if exists('s:deoplete') && has('python3')
   inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 else
   " MuComplete
-  set completeopt=menuone,noselect,noinsert
+  set completeopt=menuone
+  if v:version > 704 || (v:version == 704 && has('patch775'))
+    set completeopt+=noselect,noinsert
+    set belloff+=ctrlg " If Vim beeps during completion
+  endif
   "set completeopt+=fuzzy  " Works only in 'mrbiggfoot/[neo]vim'
   set complete=.,w,b,u
   let g:mucomplete#enable_auto_at_startup = 1
@@ -70,36 +76,38 @@ else
   let g:mucomplete#chains.python = ['path', 'c-n', 'tags']
   let g:mucomplete#chains.unite = []
   set shortmess+=c   " Shut off completion messages
-  set belloff+=ctrlg " If Vim beeps during completion
 endif
 
 " neoview
 let g:neoview_fzf_common_opt = '--reverse --bind=tab:down
   \ --bind=ctrl-s:line-up --bind=ctrl-x:line-down'
-" Ctrl-up|down - scroll search by one line
-tnoremap <expr><silent> <C-Up> neoview#is_search_win() ? "\<C-s>" : "\<C-Up>"
-tnoremap <expr><silent> <C-Down> neoview#is_search_win() ?
-  \ "\<C-x>" : "\<C-Down>"
 
-" Opt-. and Opt-; preview scrolling (1 line)
-tnoremap <silent> … <C-\><C-n>
-  \ :call neoview#feed_keys_to_preview("\<lt>C-y>")<CR>
-tnoremap <silent> ≥ <C-\><C-n>
-  \ :call neoview#feed_keys_to_preview("\<lt>C-e>")<CR>
-tnoremap <silent> <Esc>; <C-\><C-n>
-  \ :call neoview#feed_keys_to_preview("\<lt>C-y>")<CR>
-tnoremap <silent> <Esc>. <C-\><C-n>
-  \ :call neoview#feed_keys_to_preview("\<lt>C-e>")<CR>
+if has('terminal')
+  " Ctrl-up|down - scroll search by one line
+  tnoremap <expr><silent> <C-Up> neoview#is_search_win() ? "\<C-s>" : "\<C-Up>"
+  tnoremap <expr><silent> <C-Down> neoview#is_search_win() ?
+    \ "\<C-x>" : "\<C-Down>"
 
-" Opt-, and Opt-l preview scrolling (page)
-tnoremap <silent> ¬ <C-\><C-n>
-  \ :call neoview#feed_keys_to_preview("\<lt>PageUp>")<CR>
-tnoremap <silent> ≤ <C-\><C-n>
-  \ :call neoview#feed_keys_to_preview("\<lt>PageDown>")<CR>
-tnoremap <silent> <Esc>l <C-\><C-n>
-  \ :call neoview#feed_keys_to_preview("\<lt>PageUp>")<CR>
-tnoremap <silent> <Esc>, <C-\><C-n>
-  \ :call neoview#feed_keys_to_preview("\<lt>PageDown>")<CR>
+  " Opt-. and Opt-; preview scrolling (1 line)
+  tnoremap <silent> … <C-\><C-n>
+    \ :call neoview#feed_keys_to_preview("\<lt>C-y>")<CR>
+  tnoremap <silent> ≥ <C-\><C-n>
+    \ :call neoview#feed_keys_to_preview("\<lt>C-e>")<CR>
+  tnoremap <silent> <Esc>; <C-\><C-n>
+    \ :call neoview#feed_keys_to_preview("\<lt>C-y>")<CR>
+  tnoremap <silent> <Esc>. <C-\><C-n>
+    \ :call neoview#feed_keys_to_preview("\<lt>C-e>")<CR>
+
+  " Opt-, and Opt-l preview scrolling (page)
+  tnoremap <silent> ¬ <C-\><C-n>
+    \ :call neoview#feed_keys_to_preview("\<lt>PageUp>")<CR>
+  tnoremap <silent> ≤ <C-\><C-n>
+    \ :call neoview#feed_keys_to_preview("\<lt>PageDown>")<CR>
+  tnoremap <silent> <Esc>l <C-\><C-n>
+    \ :call neoview#feed_keys_to_preview("\<lt>PageUp>")<CR>
+  tnoremap <silent> <Esc>, <C-\><C-n>
+    \ :call neoview#feed_keys_to_preview("\<lt>PageDown>")<CR>
+endif
 
 " Unite
 call unite#custom#profile('default', 'context', {
@@ -471,11 +479,13 @@ inoremap <Esc>[1;3C <End>
 "nnoremap <S-Up> <C-w><Up>
 "nnoremap <S-Down> <C-w><Down>
 
-" Move from the neovim terminal window to other neovim windows
-tnoremap <S-Left> <C-w>h
-tnoremap <S-Right> <C-w>l
-tnoremap <S-Up> <C-w>k
-tnoremap <S-Down> <C-w>j
+if has('terminal')
+  " Move from the neovim terminal window to other neovim windows
+  tnoremap <S-Left> <C-w>h
+  tnoremap <S-Right> <C-w>l
+  tnoremap <S-Up> <C-w>k
+  tnoremap <S-Down> <C-w>j
+endif
 
 " Enhance '<' '>' - do not need to reselect the block after shift it.
 vnoremap < <gv
@@ -636,7 +646,9 @@ inoremap <silent> <Esc><Esc>OQ <Esc>:call FindBufLine()<CR>
 let s:f3_cmd = StartOrCloseUniteCallCmd('Unite -previewheight=100 buffer')
 exec 'nnoremap <silent> <F3> ' . s:f3_cmd
 exec 'inoremap <silent> <F3> <Esc>' . s:f3_cmd
-exec 'tnoremap <silent> <F3> <C-\><C-n>' . s:f3_cmd
+if has('terminal')
+  exec 'tnoremap <silent> <F3> <C-\><C-n>' . s:f3_cmd
+endif
 
 " Cmd-F3 - commands history
 nnoremap <silent> <Esc>[1;3R :History:<CR>
@@ -711,7 +723,9 @@ inoremap <Esc>[21;2~
 
 " F11 - toggle neoview window
 nnoremap <silent> <F11> :call neoview#fzf#run({})<CR>
-tnoremap <silent> <F11> <C-\><C-n> :call neoview#fzf#run({})<CR>
+if has('terminal')
+  tnoremap <silent> <F11> <C-\><C-n> :call neoview#fzf#run({})<CR>
+endif
 
 " F12 - find definitions of the word under cursor, prefer project tags
 nnoremap <silent> <F12> :call FindTag(expand("<cword>"), v:true, v:false)<CR>
@@ -812,7 +826,10 @@ set showcmd " display incomplete commands
 set cmdheight=1 " 1 screen lines to use for the command-line
 set ruler " show the cursor position all the time
 set hid " allow to change buffer without saving
-set shortmess=atIS " shortens messages to avoid 'press a key' prompt
+set shortmess=atI " shortens messages to avoid 'press a key' prompt
+if v:version >= 800
+  set shortmess+=S
+endif
 "set lazyredraw " do not redraw while executing macros (much faster)
 set display+=lastline " for easy browse last line with wrap text
 set laststatus=2 " always have status-line
@@ -891,8 +908,10 @@ autocmd InsertLeave * call SetColorColumn(0)
 autocmd BufWinEnter,WinEnter * if &buftype == 'terminal' && mode() == 'n' |
   \ call feedkeys('i', 'x') | endif
 
-" No line numbers in terminal window
-autocmd TerminalOpen * setlocal nonumber norelativenumber
+if has('terminal')
+  " No line numbers in terminal window
+  autocmd TerminalOpen * setlocal nonumber norelativenumber
+endif
 
 " Update gtags using the current buffer. Gtags have to be present.
 function! GtagsUpdate()
@@ -934,7 +953,7 @@ endif
 function! BufJobSign()
   let bufnum = bufnr('%')
   let s = ''
-  if ale#engine#IsCheckingBuffer(bufnum)
+  if v:version >= 800 && ale#engine#IsCheckingBuffer(bufnum)
     let s = '@'
   endif
   if getbufvar(bufnum, 'compl_tags_job', 0) > 0
