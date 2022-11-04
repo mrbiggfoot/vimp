@@ -749,9 +749,7 @@ nnoremap <silent> <Esc><Esc>[24~
 inoremap <silent> <Esc><Esc>[24~
   \ <Esc>:call FindPattern(expand("<cword>"), v:true, '-w')<CR>
 
-" Ctrl-P or Alt-P - open list of files, prefer in project
-nnoremap <silent> <C-p> :call FindFile(v:true)<CR>
-inoremap <silent> <C-p> <Esc>:call FindFile(v:true)<CR>
+" Alt-P - open list of files, prefer in project
 nnoremap <silent> π :call FindFile(v:true)<CR>
 inoremap <silent> π <Esc>:call FindFile(v:true)<CR>
 
