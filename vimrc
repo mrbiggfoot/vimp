@@ -58,6 +58,7 @@ call plug#end()
 if exists('s:deoplete') && has('python3')
   let g:deoplete#enable_at_startup = 1
   inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+  set completeopt-=preview
 else
   " MuComplete
   set completeopt=menuone
