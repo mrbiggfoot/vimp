@@ -6,6 +6,14 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync
 endif
 
+" Disable ALE
+if filereadable("./.ale_cfg.vim")
+  silent source ./.ale_cfg.vim
+else
+  let g:no_ale = 1
+endif
+
+
 " Deoplete/mucomplete switch.
 let s:deoplete = 1
 
@@ -25,7 +33,9 @@ Plug 'mrbiggfoot/vim-oscyank'
 
 Plug 'vim-scripts/a.vim'
 Plug 'Yggdroot/indentLine'
-Plug 'dense-analysis/ale'
+if !exists('g:no_ale')
+  Plug 'dense-analysis/ale'
+endif
 Plug 'vim-python/python-syntax'
 if v:version > 800 || (v:version == 800 && has('patch1453'))
   Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
@@ -150,12 +160,6 @@ let g:ale_lint_delay = 1000
 let g:ale_enabled = 0
 autocmd InsertEnter * if !exists('g:no_ale') | let g:no_ale = 1 |
   \ ALEEnable | endif
-
-if filereadable("./.ale_cfg.vim")
-  silent source ./.ale_cfg.vim
-else
-  let g:no_ale = 1
-endif
 
 augroup ALEProgress
     autocmd!
@@ -952,7 +956,8 @@ endif
 function! BufJobSign()
   let bufnum = bufnr('%')
   let s = ''
-  if v:version >= 800 && ale#engine#IsCheckingBuffer(bufnum)
+  if v:version >= 800 && g:ale_enabled &&
+        \ ale#engine#IsCheckingBuffer(bufnum)
     let s = '@'
   endif
   if getbufvar(bufnum, 'compl_tags_job', 0) > 0
