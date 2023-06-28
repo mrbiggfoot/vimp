@@ -154,18 +154,20 @@ let g:indentLine_faster = 1
 let g:indentLine_color_term = 252
 
 " ALE
-let g:ale_lint_delay = 1000
-
 " Disable ALE until the first insert mode entering
 let g:ale_enabled = 0
-autocmd InsertEnter * if !exists('g:no_ale') | let g:no_ale = 1 |
-  \ ALEEnable | endif
 
-augroup ALEProgress
+if !exists('g:no_ale')
+  let g:ale_lint_delay = 1000
+  autocmd InsertEnter * if !exists('g:no_ale') | let g:no_ale = 1 |
+    \ ALEEnable | endif
+
+  augroup ALEProgress
     autocmd!
     autocmd User ALELintPre  redrawstatus!
     autocmd User ALELintPost redrawstatus!
-augroup end
+  augroup end
+endif
 
 " python-syntax
 let g:python_version_2 = 1
