@@ -51,6 +51,14 @@ write_project_settings()
 	find . -maxdepth 1 ! -path "*/\.*" ! -path "*\~" ! -path "." -type d | sort | xargs -n1 basename | awk '{ print "\t\"" $0 "\"" }'
 	echo ")"
 	echo
+	echo "# Directories to be excluded"
+	echo "#PRJ_DIRS_EXCLUDE=("
+	echo -e "#\t\"build/toolchain/include/boost\""
+	echo "#)"
+	echo
+	echo "# File types to include in the project"
+	echo "PRJ_FILE_TYPES=(\"c\" \"cpp\" \"protobuf\" \"flatbuffers\" \"py\")"
+	echo
 	echo "# Default tags to be built on running 'project_generate.sh'"
 	echo "# Possible values are: ctags, gtags, none, all"
 	echo "PRJ_TAGS=ctags"
@@ -62,6 +70,8 @@ write_project_settings()
 	echo "# 0 disables parallelizing and uses the regular gtags/global"
 	echo "PRJ_GTAGS_NUM_INSTANCES=0"
 	echo
+	echo "#---------------- End of configurable values ----------------"
+	echo
 	echo "# Make the argument string for ripgrep"
 	echo "PRJ_DIRS_ARG="
 	echo "for dir in \"\${PRJ_DIRS[@]}\""
@@ -69,20 +79,12 @@ write_project_settings()
 	echo -e "\tPRJ_DIRS_ARG+=\"\$dir \""
 	echo "done"
 	echo
-	echo "# Directories to be excluded"
-	echo "#PRJ_DIRS_EXCLUDE=("
-	echo -e "#\t\"build/toolchain/include/boost\""
-	echo "#)"
-	echo
 	echo "# Make the argument string for ripgrep"
 	echo "PRJ_DIRS_EXCLUDE_ARG="
 	echo "for dir in \"\${PRJ_DIRS_EXCLUDE[@]}\""
 	echo "do"
 	echo -e "\tPRJ_DIRS_EXCLUDE_ARG+=\"-g '!\$dir' \""
 	echo "done"
-	echo
-	echo "# File types to include in the project"
-	echo "PRJ_FILE_TYPES=(\"c\" \"cpp\" \"protobuf\" \"flatbuffers\" \"py\")"
 	echo
 	echo "# Make the argument string for ripgrep"
 	echo "PRJ_FILE_TYPES_ARG="
