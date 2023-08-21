@@ -51,11 +51,12 @@ else
 endif
 
 Plug 'Shougo/unite.vim'
-if exists('s:deoplete') && has('python3')
+if exists('s:deoplete') && has('python3') && v:version >= 801
   Plug 'Shougo/deoplete.nvim'
   Plug 'roxma/nvim-yarp'
   Plug 'roxma/vim-hug-neovim-rpc'
 else
+  unlet s:deoplete
   Plug 'lifepillar/vim-mucomplete'
 endif
 
@@ -86,7 +87,10 @@ else
   let g:mucomplete#chains.c = g:mucomplete#chains.cpp
   let g:mucomplete#chains.python = ['path', 'c-n', 'tags']
   let g:mucomplete#chains.unite = []
-  set shortmess+=c   " Shut off completion messages
+  try
+    set shortmess+=c   " Shut off completion messages
+  catch /E539: Illegal character/
+  endtry
 endif
 
 " neoview
@@ -832,9 +836,10 @@ set cmdheight=1 " 1 screen lines to use for the command-line
 set ruler " show the cursor position all the time
 set hid " allow to change buffer without saving
 set shortmess=atI " shortens messages to avoid 'press a key' prompt
-if v:version >= 800
+try
   set shortmess+=S
-endif
+catch /E539: Illegal character/
+endtry
 "set lazyredraw " do not redraw while executing macros (much faster)
 set display+=lastline " for easy browse last line with wrap text
 set laststatus=2 " always have status-line
