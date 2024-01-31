@@ -264,7 +264,10 @@ endfunction
 
 call s:configure_project()
 
-function! s:update_project(args)
+function! s:update_project(args, rmtags)
+  if a:rmtags
+    silent exec '!' . s:vimp_path . '/project_generate.sh rmtags'
+  endif
   exec '!' . s:vimp_path . '/project_generate.sh ' . a:args
   call s:configure_project()
 endfunction
@@ -804,16 +807,16 @@ command! -nargs=1 -complete=tag FRC
   \ :call FindGtags(shellescape(<q-args>), '', v:true)
 
 " Up - update project metadata (file list and ctags)
-command! -nargs=0 Up :call s:update_project("")
+command! -bang -nargs=0 Up :call s:update_project("", <bang>0)
 
 " Uc - update project's ctags
-command! -nargs=0 Uc :call s:update_project("ctags")
+command! -nargs=0 Uc :call s:update_project("ctags", v:false)
 
 " Ug - update project's gtags
-command! -nargs=0 Ug :call s:update_project("gtags")
+command! -nargs=0 Ug :call s:update_project("gtags", v:false)
 
 " Ut - update project's ctags and gtags
-command! -nargs=0 Ut :call s:update_project("tags")
+command! -nargs=0 Ut :call s:update_project("tags", v:false)
 
 "------------------------------------------------------------------------------
 " Misc configuration

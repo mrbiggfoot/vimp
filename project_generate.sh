@@ -36,6 +36,7 @@ print_usage()
 	echo "  ctags    : generate Universal ctags."
 	echo "  gtags    : generate GNU Global tags."
 	echo "  tags     : generate Universal and GNU Global tags."
+	echo "  rmtags   : remove tags."
 	echo "  clean    : delete metadata of all the dead branches."
 	echo "  cleanall : delete metadata of all the branches except the current one."
 	echo
@@ -126,6 +127,15 @@ generate_gtags()
 	fi
 }
 
+remove_tags()
+{
+	echo Remove tags from $CUR_PRJ_BRANCH_META_ROOT
+	set -e
+	cd $CUR_PRJ_BRANCH_META_ROOT
+	rm -f tagnames files GPATH GRTAGS GTAGS GTIMES
+	find -mindepth 1 -maxdepth 1 -type d -exec rm -r {} \;
+}
+
 if [ $# -eq 1 ]; then
 	if [ -f $CUR_PRJ_SETTINGS ]; then
 		source $CUR_PRJ_SETTINGS
@@ -157,6 +167,8 @@ if [ $# -eq 1 ]; then
 	elif [ "$1" == 'tags' ]; then
 		generate_ctags
 		generate_gtags
+	elif [ "$1" == 'rmtags' ]; then
+		remove_tags
 	elif [ "$1" == 'clean' ]; then
 		echo Delete all dead branches
 		for dir in `find $CUR_PRJ_META_ROOT -maxdepth 1 ! -path "$CUR_PRJ_BRANCH_META_ROOT" ! -path "$CUR_PRJ_META_ROOT" -type d -printf %f"\n"`
