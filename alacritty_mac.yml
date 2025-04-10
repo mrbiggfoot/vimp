@@ -70,6 +70,7 @@ mouse:
 key_bindings:
   - { key: Q, mods: Command, action: None  }
   - { key: W, mods: Command, chars: "\x17" }
+  - { key: R, mods: Command, chars: "\x12" }
 
   - { key: Back, mods: Option, chars: "\x17" }
   - { key: Back, mods: Command, chars: "\x15" }
